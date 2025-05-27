@@ -56,20 +56,168 @@ def create_app():
             from src.models.database import Professor
             return Professor.query.get(int(user_id))
         
-        # Adiciona rota raiz para redirecionar para a página de login
+        # Adiciona rota raiz para redirecionar para a página inicial
         @app.route('/')
         def index():
             return redirect(url_for('auth.login'))
         
-        # Rota alternativa para página inicial personalizada
+        # Rota para página inicial personalizada
         @app.route('/home')
         def home():
             return render_template('index.html')
         
         # Cria tabelas do banco de dados se não existirem
         db.create_all()
+        
+        # Inicializa dados de exemplo se o banco estiver vazio
+        inicializar_dados_exemplo(db)
     
     return app
+
+def inicializar_dados_exemplo(db):
+    """
+    Inicializa dados de exemplo no banco de dados se estiver vazio.
+    """
+    from src.models.database import Professor, Colegio, Turma, Disciplina, Periodo, Aluno
+    from werkzeug.security import generate_password_hash
+    
+    # Verificar se já existem dados
+    if Professor.query.count() > 0:
+        return
+    
+    # Criar professor de exemplo
+    professor = Professor(
+        nome="Professor Exemplo",
+        email="professor@exemplo.com",
+        senha_hash=generate_password_hash("senha123")
+    )
+    db.session.add(professor)
+    db.session.commit()
+    
+    # Criar colégio de exemplo
+    colegio = Colegio(
+        nome="Colégio Técnico Exemplo",
+        endereco="Rua das Escolas, 123"
+    )
+    db.session.add(colegio)
+    db.session.commit()
+    
+    # Criar turma de exemplo
+    turma = Turma(
+        nome="Turma 3º Ano - Desenvolvimento de Sistemas",
+        ano=2025,
+        professor_id=professor.id,
+        colegio_id=colegio.id
+    )
+    db.session.add(turma)
+    db.session.commit()
+    
+    # Criar disciplinas de exemplo
+    disciplinas = [
+        Disciplina(
+            nome="Programação Web",
+            descricao="Desenvolvimento de aplicações web com HTML, CSS e JavaScript",
+            professor_id=professor.id,
+            icone="fa-globe",
+            cor="#3498db"
+        ),
+        Disciplina(
+            nome="Banco de Dados",
+            descricao="Modelagem e implementação de bancos de dados relacionais",
+            professor_id=professor.id,
+            icone="fa-database",
+            cor="#2ecc71"
+        ),
+        Disciplina(
+            nome="Desenvolvimento Mobile",
+            descricao="Criação de aplicativos para dispositivos móveis",
+            professor_id=professor.id,
+            icone="fa-mobile-alt",
+            cor="#e74c3c"
+        )
+    ]
+    
+    for disciplina in disciplinas:
+        db.session.add(disciplina)
+    db.session.commit()
+    
+    # Criar períodos de exemplo
+    periodo_ano = Periodo(
+        nome="Ano Letivo 2025",
+        data_inicio="2025-02-01",
+        data_fim="2025-12-15",
+        tipo="Ano"
+    )
+    db.session.add(periodo_ano)
+    db.session.commit()
+    
+    periodos = [
+        Periodo(
+            nome="1º Bimestre",
+            data_inicio="2025-02-01",
+            data_fim="2025-04-15",
+            tipo="Bimestre",
+            periodo_pai_id=periodo_ano.id
+        ),
+        Periodo(
+            nome="2º Bimestre",
+            data_inicio="2025-04-16",
+            data_fim="2025-06-30",
+            tipo="Bimestre",
+            periodo_pai_id=periodo_ano.id
+        ),
+        Periodo(
+            nome="3º Bimestre",
+            data_inicio="2025-08-01",
+            data_fim="2025-10-15",
+            tipo="Bimestre",
+            periodo_pai_id=periodo_ano.id
+        ),
+        Periodo(
+            nome="4º Bimestre",
+            data_inicio="2025-10-16",
+            data_fim="2025-12-15",
+            tipo="Bimestre",
+            periodo_pai_id=periodo_ano.id
+        )
+    ]
+    
+    for periodo in periodos:
+        db.session.add(periodo)
+    db.session.commit()
+    
+    # Criar alunos de exemplo
+    alunos = [
+        Aluno(
+            nome="Ana Silva",
+            email="ana.silva@aluno.exemplo.com",
+            turma_id=turma.id
+        ),
+        Aluno(
+            nome="Bruno Santos",
+            email="bruno.santos@aluno.exemplo.com",
+            turma_id=turma.id
+        ),
+        Aluno(
+            nome="Carla Oliveira",
+            email="carla.oliveira@aluno.exemplo.com",
+            turma_id=turma.id
+        ),
+        Aluno(
+            nome="Daniel Pereira",
+            email="daniel.pereira@aluno.exemplo.com",
+            turma_id=turma.id
+        ),
+        Aluno(
+            nome="Eduarda Costa",
+            email="eduarda.costa@aluno.exemplo.com",
+            turma_id=turma.id
+        )
+    ]
+    
+    for aluno in alunos:
+        db.session.add(aluno)
+    db.session.commit()
 
 # Cria a instância do aplicativo para uso com Gunicorn
 app = create_app()
