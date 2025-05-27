@@ -24,6 +24,16 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'auth.login'
 
+# Função para carregar o usuário pelo ID (necessário para o Flask-Login)
+@login_manager.user_loader
+def load_user(user_id):
+    """
+    Função para carregar o usuário pelo ID.
+    Necessária para o funcionamento do Flask-Login.
+    """
+    from src.models.database import Professor
+    return Professor.query.get(int(user_id))
+
 # Registro dos blueprints
 app.register_blueprint(auth_bp, url_prefix='/api/auth')
 app.register_blueprint(professor_bp, url_prefix='/api/professor')
