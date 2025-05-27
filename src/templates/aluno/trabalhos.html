@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trabalhos Exemplares - Sistema de Gamificação Escolar</title>
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2ecc71;
+            --dark-color: #2c3e50;
+            --light-color: #ecf0f1;
+            --danger-color: #e74c3c;
+            --warning-color: #f39c12;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light-color);
+            color: var(--dark-color);
+            line-height: 1.6;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 20px 0;
+            margin-bottom: 30px;
+        }
+        
+        header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        header h1 {
+            font-size: 28px;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin-left: 20px;
+        }
+        
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: opacity 0.3s;
+        }
+        
+        nav ul li a:hover {
+            opacity: 0.8;
+        }
+        
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        
+        .page-title {
+            font-size: 32px;
+        }
+        
+        .student-info {
+            display: flex;
+            align-items: center;
+            background-color: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .student-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin-right: 15px;
+        }
+        
+        .student-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .student-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .student-class {
+            font-size: 14px;
+            color: #777;
+        }
+        
+        .works-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .work-card {
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+        
+        .work-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .work-header {
+            padding: 20px;
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .work-title {
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+        
+        .work-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            opacity: 0.8;
+        }
+        
+        .work-content {
+            padding: 20px;
+        }
+        
+        .work-description {
+            margin-bottom: 20px;
+        }
+        
+        .work-links {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .work-link {
+            display: inline-block;
+            padding: 8px 15px;
+            background-color: var(--light-color);
+            color: var(--dark-color);
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: background-color 0.3s;
+        }
+        
+        .work-link:hover {
+            background-color: #ddd;
+        }
+        
+        .work-link i {
+            margin-right: 5px;
+        }
+        
+        .links {
+            display: flex;
+            justify-content: center;
+            margin-top: 30px;
+        }
+        
+        .links a {
+            margin: 0 10px;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .links a:hover {
+            text-decoration: underline;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            padding: 20px;
+            color: #777;
+            font-size: 14px;
+        }
+        
+        @media (max-width: 768px) {
+            header .container {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            nav ul {
+                margin-top: 15px;
+                justify-content: center;
+            }
+            
+            nav ul li {
+                margin: 0 10px;
+            }
+            
+            .page-header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .page-title {
+                margin-bottom: 20px;
+            }
+            
+            .works-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Sistema de Gamificação Escolar</h1>
+            <nav>
+                <ul>
+                    <li><a href="{{ url_for('auth.login') }}">Área do Professor</a></li>
+                    <li><a href="{{ url_for('aluno.ranking') }}">Ranking</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="page-header">
+            <h2 class="page-title">Trabalhos Exemplares</h2>
+            
+            <div class="student-info">
+                <div class="student-avatar">
+                    {% if aluno.foto %}
+                        <img src="{{ aluno.foto }}" alt="{{ aluno.nome }}">
+                    {% elif aluno.avatar %}
+                        <img src="{{ aluno.avatar }}" alt="{{ aluno.nome }}">
+                    {% else %}
+                        <div style="width: 100%; height: 100%; background-color: #ddd; display: flex; justify-content: center; align-items: center;">
+                            <i class="fas fa-user" style="font-size: 20px; color: #aaa;"></i>
+                        </div>
+                    {% endif %}
+                </div>
+                
+                <div>
+                    <div class="student-name">{{ aluno.nome }}</div>
+                    <div class="student-class">{{ aluno.turma.nome }}</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="works-grid">
+            {% for trabalho in trabalhos %}
+            {% set atividade = trabalho.atividade %}
+            <div class="work-card">
+                <div class="work-header" style="background-color: {{ atividade.disciplina.cor }};">
+                    <h3 class="work-title">{{ atividade.titulo }}</h3>
+                    <div class="work-meta">
+                        <div>{{ atividade.disciplina.nome }}</div>
+                        <div>{{ atividade.data_entrega.strftime('%d/%m/%Y') }}</div>
+                    </div>
+                </div>
+                
+                <div class="work-content">
+                    <div class="work-description">
+                        {{ trabalho.descricao }}
+                    </div>
+                    
+                    <div class="work-links">
+                        {% if trabalho.link %}
+                        <a href="{{ trabalho.link }}" target="_blank" class="work-link">
+                            <i class="fas fa-external-link-alt"></i> Ver online
+                        </a>
+                        {% endif %}
+                        
+                        {% if trabalho.arquivo %}
+                        <a href="{{ trabalho.arquivo }}" target="_blank" class="work-link">
+                            <i class="fas fa-download"></i> Download
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <div style="text-align: center; padding: 50px; background-color: white; border-radius: 10px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); grid-column: 1 / -1;">
+                <i class="fas fa-trophy" style="font-size: 48px; color: #ddd; margin-bottom: 20px;"></i>
+                <p>Nenhum trabalho exemplar destacado ainda.</p>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <div class="links">
+            <a href="{{ url_for('aluno.perfil', id=aluno.id) }}">Ver Perfil</a>
+            <a href="{{ url_for('aluno.linha_tempo', id=aluno.id) }}">Ver Linha do Tempo</a>
+            <a href="{{ url_for('aluno.ranking') }}">Voltar ao Ranking</a>
+        </div>
+    </div>
+    
+    <footer>
+        <div class="container">
+            <p>Sistema de Gamificação Escolar &copy; 2025. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+</body>
+</html>
