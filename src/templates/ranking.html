@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ranking - Sistema de Gamificação Escolar</title>
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2ecc71;
+            --dark-color: #2c3e50;
+            --light-color: #ecf0f1;
+            --danger-color: #e74c3c;
+            --warning-color: #f39c12;
+            --gold: #f1c40f;
+            --silver: #bdc3c7;
+            --bronze: #cd7f32;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light-color);
+            color: var(--dark-color);
+            line-height: 1.6;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 20px 0;
+            margin-bottom: 30px;
+        }
+        
+        header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        header h1 {
+            font-size: 28px;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin-left: 20px;
+        }
+        
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: opacity 0.3s;
+        }
+        
+        nav ul li a:hover {
+            opacity: 0.8;
+        }
+        
+        .filters {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .filters h2 {
+            margin-bottom: 15px;
+            font-size: 20px;
+            color: var(--dark-color);
+        }
+        
+        .filter-form {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .form-group {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+        
+        .form-group select, .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            transition: background-color 0.3s;
+        }
+        
+        .btn:hover {
+            background-color: #2980b9;
+        }
+        
+        .ranking-table {
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        
+        th {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: 600;
+        }
+        
+        tr:hover {
+            background-color: #f9f9f9;
+        }
+        
+        .position {
+            font-weight: 700;
+            text-align: center;
+            width: 60px;
+        }
+        
+        .position-1 {
+            color: var(--gold);
+        }
+        
+        .position-2 {
+            color: var(--silver);
+        }
+        
+        .position-3 {
+            color: var(--bronze);
+        }
+        
+        .student-info {
+            display: flex;
+            align-items: center;
+        }
+        
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+            object-fit: cover;
+            background-color: #ddd;
+        }
+        
+        .category {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            text-align: center;
+        }
+        
+        .category-s {
+            background-color: #f1c40f;
+            color: #7d6608;
+        }
+        
+        .category-a {
+            background-color: #2ecc71;
+            color: #1b7943;
+        }
+        
+        .category-b {
+            background-color: #3498db;
+            color: #1d5a82;
+        }
+        
+        .category-c {
+            background-color: #9b59b6;
+            color: #5c3370;
+        }
+        
+        .category-d {
+            background-color: #e74c3c;
+            color: #7e2a22;
+        }
+        
+        .level {
+            font-weight: 600;
+        }
+        
+        .score {
+            font-weight: 700;
+            text-align: center;
+        }
+        
+        .view-profile {
+            text-align: center;
+        }
+        
+        .view-profile a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .view-profile a:hover {
+            text-decoration: underline;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            padding: 20px;
+            color: #777;
+            font-size: 14px;
+        }
+        
+        @media (max-width: 768px) {
+            header .container {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            nav ul {
+                margin-top: 15px;
+                justify-content: center;
+            }
+            
+            nav ul li {
+                margin: 0 10px;
+            }
+            
+            .filter-form {
+                flex-direction: column;
+            }
+            
+            th, td {
+                padding: 10px;
+            }
+            
+            .position, .category, .level {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Sistema de Gamificação Escolar</h1>
+            <nav>
+                <ul>
+                    <li><a href="{{ url_for('auth.login') }}">Área do Professor</a></li>
+                    <li><a href="{{ url_for('aluno.ranking') }}">Ranking</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    
+    <div class="container">
+        <section class="filters">
+            <h2>Filtros</h2>
+            <form class="filter-form" method="GET" action="{{ url_for('aluno.ranking') }}">
+                <div class="form-group">
+                    <label for="colegio">Colégio</label>
+                    <select id="colegio" name="colegio">
+                        <option value="">Todos</option>
+                        {% for colegio in colegios %}
+                            <option value="{{ colegio.id }}" {% if request.args.get('colegio')|int == colegio.id %}selected{% endif %}>{{ colegio.nome }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="turma">Turma</label>
+                    <select id="turma" name="turma">
+                        <option value="">Todas</option>
+                        {% for turma in turmas %}
+                            <option value="{{ turma.id }}" {% if request.args.get('turma')|int == turma.id %}selected{% endif %}>{{ turma.nome }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="disciplina">Disciplina</label>
+                    <select id="disciplina" name="disciplina">
+                        <option value="">Todas</option>
+                        {% for disciplina in disciplinas %}
+                            <option value="{{ disciplina.id }}" {% if request.args.get('disciplina')|int == disciplina.id %}selected{% endif %}>{{ disciplina.nome }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="periodo">Período</label>
+                    <select id="periodo" name="periodo">
+                        <option value="">Todos</option>
+                        {% for periodo in periodos %}
+                            <option value="{{ periodo.id }}" {% if request.args.get('periodo')|int == periodo.id %}selected{% endif %}>{{ periodo.nome }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="form-group" style="align-self: flex-end;">
+                    <button type="submit" class="btn">Filtrar</button>
+                </div>
+            </form>
+        </section>
+        
+        <section class="ranking-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th class="position">#</th>
+                        <th>Aluno</th>
+                        <th class="category">Categoria</th>
+                        <th class="level">Nível</th>
+                        <th class="score">XP</th>
+                        <th class="view-profile">Perfil</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for aluno in alunos %}
+                    <tr>
+                        <td class="position {% if loop.index == 1 %}position-1{% elif loop.index == 2 %}position-2{% elif loop.index == 3 %}position-3{% endif %}">{{ loop.index }}</td>
+                        <td>
+                            <div class="student-info">
+                                {% if aluno.foto %}
+                                    <img src="{{ aluno.foto }}" alt="{{ aluno.nome }}" class="avatar">
+                                {% elif aluno.avatar %}
+                                    <img src="{{ aluno.avatar }}" alt="{{ aluno.nome }}" class="avatar">
+                                {% else %}
+                                    <div class="avatar"></div>
+                                {% endif %}
+                                <div>
+                                    <div>{{ aluno.nome }}</div>
+                                    <small>{{ aluno.turma.nome }}</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="category">
+                            {% if aluno.media >= 9.0 %}
+                                <span class="category category-s">S</span>
+                            {% elif aluno.media >= 8.0 %}
+                                <span class="category category-a">A</span>
+                            {% elif aluno.media >= 7.0 %}
+                                <span class="category category-b">B</span>
+                            {% elif aluno.media >= 6.0 %}
+                                <span class="category category-c">C</span>
+                            {% else %}
+                                <span class="category category-d">D</span>
+                            {% endif %}
+                        </td>
+                        <td class="level">
+                            {% set nivel = (aluno.xp // 100) + 1 %}
+                            Nível {{ nivel }}
+                        </td>
+                        <td class="score">{{ aluno.xp }}</td>
+                        <td class="view-profile">
+                            <a href="{{ url_for('aluno.perfil', id=aluno.id) }}">Ver perfil</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    
+                    {% if not alunos %}
+                    <tr>
+                        <td colspan="6" style="text-align: center; padding: 30px;">
+                            Nenhum aluno encontrado com os filtros selecionados.
+                        </td>
+                    </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </section>
+    </div>
+    
+    <footer>
+        <div class="container">
+            <p>Sistema de Gamificação Escolar &copy; 2025. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+</body>
+</html>
