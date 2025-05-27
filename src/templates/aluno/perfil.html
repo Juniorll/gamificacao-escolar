@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil do Aluno - Sistema de Gamificação Escolar</title>
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2ecc71;
+            --dark-color: #2c3e50;
+            --light-color: #ecf0f1;
+            --danger-color: #e74c3c;
+            --warning-color: #f39c12;
+            --gold: #f1c40f;
+            --silver: #bdc3c7;
+            --bronze: #cd7f32;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light-color);
+            color: var(--dark-color);
+            line-height: 1.6;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 20px 0;
+            margin-bottom: 30px;
+        }
+        
+        header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        header h1 {
+            font-size: 28px;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin-left: 20px;
+        }
+        
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: opacity 0.3s;
+        }
+        
+        nav ul li a:hover {
+            opacity: 0.8;
+        }
+        
+        .profile-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+            background-color: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .profile-avatar {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin-right: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .profile-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .profile-info {
+            flex: 1;
+        }
+        
+        .profile-name {
+            font-size: 32px;
+            margin-bottom: 5px;
+        }
+        
+        .profile-class {
+            font-size: 18px;
+            color: #777;
+            margin-bottom: 20px;
+        }
+        
+        .profile-stats {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .stat {
+            background-color: var(--light-color);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            flex: 1;
+        }
+        
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            color: #777;
+        }
+        
+        .category-badge {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            color: white;
+            font-weight: 700;
+            font-size: 20px;
+            line-height: 40px;
+            text-align: center;
+            margin-left: 10px;
+        }
+        
+        .category-s {
+            background-color: var(--gold);
+        }
+        
+        .category-a {
+            background-color: var(--secondary-color);
+        }
+        
+        .category-b {
+            background-color: var(--primary-color);
+        }
+        
+        .category-c {
+            background-color: #9b59b6;
+        }
+        
+        .category-d {
+            background-color: var(--danger-color);
+        }
+        
+        .profile-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+        }
+        
+        .grades-section, .achievements-section {
+            background-color: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .section-title {
+            font-size: 24px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .grades-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .grades-table th, .grades-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .grades-table th {
+            font-weight: 600;
+            color: #555;
+        }
+        
+        .grades-table tr:hover {
+            background-color: #f9f9f9;
+        }
+        
+        .grade {
+            font-weight: 700;
+        }
+        
+        .grade-high {
+            color: var(--secondary-color);
+        }
+        
+        .grade-medium {
+            color: var(--primary-color);
+        }
+        
+        .grade-low {
+            color: var(--danger-color);
+        }
+        
+        .achievement {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .achievement:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+        
+        .achievement-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 20px;
+            margin-right: 15px;
+        }
+        
+        .achievement-info {
+            flex: 1;
+        }
+        
+        .achievement-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .achievement-description {
+            font-size: 14px;
+            color: #777;
+        }
+        
+        .progress-bar {
+            height: 10px;
+            background-color: #eee;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+        
+        .progress {
+            height: 100%;
+            background-color: var(--primary-color);
+            border-radius: 5px;
+        }
+        
+        .links {
+            display: flex;
+            justify-content: center;
+            margin-top: 30px;
+        }
+        
+        .links a {
+            margin: 0 10px;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .links a:hover {
+            text-decoration: underline;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            padding: 20px;
+            color: #777;
+            font-size: 14px;
+        }
+        
+        @media (max-width: 768px) {
+            header .container {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            nav ul {
+                margin-top: 15px;
+                justify-content: center;
+            }
+            
+            nav ul li {
+                margin: 0 10px;
+            }
+            
+            .profile-header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .profile-avatar {
+                margin-right: 0;
+                margin-bottom: 20px;
+            }
+            
+            .profile-stats {
+                flex-direction: column;
+            }
+            
+            .profile-content {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Sistema de Gamificação Escolar</h1>
+            <nav>
+                <ul>
+                    <li><a href="{{ url_for('auth.login') }}">Área do Professor</a></li>
+                    <li><a href="{{ url_for('aluno.ranking') }}">Ranking</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="profile-header">
+            <div class="profile-avatar">
+                {% if aluno.foto %}
+                    <img src="{{ aluno.foto }}" alt="{{ aluno.nome }}">
+                {% elif aluno.avatar %}
+                    <img src="{{ aluno.avatar }}" alt="{{ aluno.nome }}">
+                {% else %}
+                    <div style="width: 100%; height: 100%; background-color: #ddd; display: flex; justify-content: center; align-items: center;">
+                        <i class="fas fa-user" style="font-size: 60px; color: #aaa;"></i>
+                    </div>
+                {% endif %}
+            </div>
+            
+            <div class="profile-info">
+                <h2 class="profile-name">{{ aluno.nome }}</h2>
+                <p class="profile-class">{{ aluno.turma.nome }}</p>
+                
+                <div class="profile-stats">
+                    <div class="stat">
+                        <div class="stat-value">{{ total_xp }}</div>
+                        <div class="stat-label">XP Total</div>
+                    </div>
+                    
+                    <div class="stat">
+                        <div class="stat-value">{{ nivel }}</div>
+                        <div class="stat-label">Nível</div>
+                    </div>
+                    
+                    <div class="stat">
+                        <div class="stat-value">
+                            {{ "%.1f"|format(media_geral) }}
+                            <span class="category-badge category-{{ categoria.lower() }}">{{ categoria }}</span>
+                        </div>
+                        <div class="stat-label">Média Geral</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="profile-content">
+            <div class="grades-section">
+                <h3 class="section-title">Notas e Atividades</h3>
+                
+                {% if notas %}
+                <table class="grades-table">
+                    <thead>
+                        <tr>
+                            <th>Atividade</th>
+                            <th>Disciplina</th>
+                            <th>Data</th>
+                            <th>Nota</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for nota in notas %}
+                        {% set atividade = nota.atividade %}
+                        <tr>
+                            <td>{{ atividade.titulo }}</td>
+                            <td>{{ atividade.disciplina.nome }}</td>
+                            <td>{{ atividade.data_entrega.strftime('%d/%m/%Y') }}</td>
+                            <td>
+                                <span class="grade 
+                                    {% if nota.valor >= 8.0 %}grade-high
+                                    {% elif nota.valor >= 6.0 %}grade-medium
+                                    {% else %}grade-low{% endif %}">
+                                    {{ nota.valor }}
+                                </span>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <p>Nenhuma nota registrada ainda.</p>
+                {% endif %}
+            </div>
+            
+            <div class="achievements-section">
+                <h3 class="section-title">Conquistas</h3>
+                
+                <div class="achievement">
+                    <div class="achievement-icon" style="background-color: #3498db;">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                    <div class="achievement-info">
+                        <div class="achievement-title">Nível {{ nivel }}</div>
+                        <div class="achievement-description">Acumulou {{ total_xp }} pontos de experiência</div>
+                        
+                        {% set next_level = nivel + 1 %}
+                        {% set progress = (total_xp % 100) %}
+                        <div class="progress-bar">
+                            <div class="progress" style="width: {{ progress }}%;"></div>
+                        </div>
+                        <div style="font-size: 12px; text-align: right; margin-top: 5px;">{{ progress }}% para o nível {{ next_level }}</div>
+                    </div>
+                </div>
+                
+                <div class="achievement">
+                    <div class="achievement-icon" style="background-color: 
+                        {% if categoria == 'S' %}#f1c40f
+                        {% elif categoria == 'A' %}#2ecc71
+                        {% elif categoria == 'B' %}#3498db
+                        {% elif categoria == 'C' %}#9b59b6
+                        {% else %}#e74c3c{% endif %};">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <div class="achievement-info">
+                        <div class="achievement-title">Categoria {{ categoria }}</div>
+                        <div class="achievement-description">
+                            {% if categoria == 'S' %}
+                                Desempenho excepcional! Continue assim!
+                            {% elif categoria == 'A' %}
+                                Ótimo desempenho! Quase perfeito!
+                            {% elif categoria == 'B' %}
+                                Bom desempenho! Acima da média!
+                            {% elif categoria == 'C' %}
+                                Desempenho regular. Pode melhorar!
+                            {% else %}
+                                Precisa melhorar. Busque ajuda!
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                
+                {% if trabalhos %}
+                <div class="achievement">
+                    <div class="achievement-icon" style="background-color: #9b59b6;">
+                        <i class="fas fa-medal"></i>
+                    </div>
+                    <div class="achievement-info">
+                        <div class="achievement-title">Trabalho Exemplar</div>
+                        <div class="achievement-description">{{ trabalhos|length }} trabalho(s) destacado(s) pelos professores</div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="links">
+            <a href="{{ url_for('aluno.linha_tempo', id=aluno.id) }}">Ver Linha do Tempo</a>
+            <a href="{{ url_for('aluno.trabalhos', id=aluno.id) }}">Ver Trabalhos Exemplares</a>
+            <a href="{{ url_for('aluno.ranking') }}">Voltar ao Ranking</a>
+        </div>
+    </div>
+    
+    <footer>
+        <div class="container">
+            <p>Sistema de Gamificação Escolar &copy; 2025. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+</body>
+</html>
