@@ -1,0 +1,618 @@
+/* Estilos gerais */
+:root {
+    --primary-color: #3498db;
+    --secondary-color: #2ecc71;
+    --accent-color: #f39c12;
+    --danger-color: #e74c3c;
+    --dark-color: #2c3e50;
+    --light-color: #ecf0f1;
+    --text-color: #333;
+    --border-radius: 8px;
+    --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --transition: all 0.3s ease;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f5f7fa;
+    color: var(--text-color);
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+}
+
+/* Animação de carregamento */
+.loading-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100%;
+}
+
+.loading-animation {
+    text-align: center;
+    padding: 2rem;
+    border-radius: var(--border-radius);
+    background-color: white;
+    box-shadow: var(--box-shadow);
+    max-width: 400px;
+    width: 100%;
+}
+
+.loading-animation i {
+    font-size: 3rem;
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+}
+
+.loading-animation .progress {
+    margin: 1rem 0;
+    height: 10px;
+}
+
+/* Estilos de login e cadastro */
+.login-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 2rem;
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+}
+
+.login-card {
+    background-color: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    padding: 2rem;
+    width: 100%;
+    max-width: 450px;
+    margin-bottom: 2rem;
+}
+
+.login-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.login-header h1 {
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+}
+
+.login-form .form-group {
+    margin-bottom: 1.5rem;
+}
+
+.login-form label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+
+.login-form input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: var(--border-radius);
+    transition: var(--transition);
+}
+
+.login-form input:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+    outline: none;
+}
+
+.btn {
+    cursor: pointer;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: var(--border-radius);
+    font-weight: 600;
+    transition: var(--transition);
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #2980b9;
+}
+
+.btn-success {
+    background-color: var(--secondary-color);
+    color: white;
+}
+
+.btn-success:hover {
+    background-color: #27ae60;
+}
+
+.btn-block {
+    display: block;
+    width: 100%;
+}
+
+.login-footer {
+    text-align: center;
+    margin-top: 1.5rem;
+}
+
+.login-footer a {
+    color: var(--primary-color);
+    text-decoration: none;
+}
+
+.login-footer a:hover {
+    text-decoration: underline;
+}
+
+.aluno-access {
+    text-align: center;
+}
+
+/* Dashboard do professor */
+.dashboard-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.navbar {
+    padding: 0.75rem 1rem;
+}
+
+.navbar-brand {
+    font-weight: 700;
+    font-size: 1.25rem;
+}
+
+.content-container {
+    flex: 1;
+    padding: 2rem;
+    overflow-y: auto;
+}
+
+.dashboard-content {
+    background-color: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    padding: 2rem;
+}
+
+.dashboard-welcome {
+    text-align: center;
+    padding: 3rem 1rem;
+}
+
+.dashboard-welcome h2 {
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+}
+
+/* Área do aluno */
+.aluno-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.aluno-content {
+    background-color: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    padding: 2rem;
+}
+
+/* Ranking */
+.ranking-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+}
+
+.ranking-table th,
+.ranking-table td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+}
+
+.ranking-table th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+}
+
+.ranking-table tr:hover {
+    background-color: #f8f9fa;
+}
+
+.ranking-position {
+    font-weight: 700;
+    text-align: center;
+}
+
+.position-1 {
+    color: gold;
+}
+
+.position-2 {
+    color: silver;
+}
+
+.position-3 {
+    color: #cd7f32; /* Bronze */
+}
+
+.aluno-avatar-small {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 0.5rem;
+}
+
+.categoria-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: white;
+}
+
+/* Perfil do aluno */
+.aluno-perfil-container {
+    padding: 1rem;
+}
+
+.aluno-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background-color: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+}
+
+.aluno-avatar {
+    margin-right: 2rem;
+}
+
+.aluno-avatar img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid var(--primary-color);
+}
+
+.aluno-info h2 {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    color: var(--dark-color);
+}
+
+.aluno-categoria {
+    margin-bottom: 1rem;
+}
+
+.aluno-nivel {
+    margin-top: 1rem;
+}
+
+.nivel-titulo {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.nivel-progress {
+    display: flex;
+    align-items: center;
+}
+
+.nivel-progress .progress {
+    flex: 1;
+    height: 10px;
+    margin-right: 1rem;
+}
+
+.aluno-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.stat-card {
+    background-color: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+}
+
+.stat-icon {
+    font-size: 2rem;
+    color: var(--primary-color);
+    margin-right: 1.5rem;
+}
+
+.stat-info h3 {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+    color: var(--dark-color);
+}
+
+.stat-info p {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+/* Linha do tempo */
+.aluno-timeline {
+    background-color: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    padding: 1.5rem;
+}
+
+.aluno-timeline h3 {
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    color: var(--dark-color);
+}
+
+.timeline {
+    position: relative;
+    padding-left: 2rem;
+}
+
+.timeline::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background-color: #ddd;
+}
+
+.timeline-item {
+    position: relative;
+    padding-bottom: 2rem;
+}
+
+.timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -2rem;
+    top: 0;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background-color: var(--primary-color);
+    border: 3px solid white;
+}
+
+.timeline-item.realizada::before {
+    background-color: var(--secondary-color);
+}
+
+.timeline-item.nao_realizada::before {
+    background-color: var(--danger-color);
+}
+
+.timeline-item.trabalho_exemplar::before {
+    background-color: var(--accent-color);
+    box-shadow: 0 0 0 3px rgba(243, 156, 18, 0.3);
+}
+
+.timeline-content {
+    background-color: #f8f9fa;
+    border-radius: var(--border-radius);
+    padding: 1rem;
+}
+
+.timeline-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+}
+
+.timeline-title {
+    font-weight: 600;
+    color: var(--dark-color);
+}
+
+.timeline-date {
+    font-size: 0.85rem;
+    color: #777;
+}
+
+.timeline-disciplina {
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    margin-bottom: 0.5rem;
+    color: white;
+}
+
+.timeline-nota {
+    font-weight: 700;
+    margin-top: 0.5rem;
+}
+
+/* Trabalhos exemplares */
+.trabalhos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.trabalho-card {
+    background-color: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    overflow: hidden;
+    transition: var(--transition);
+}
+
+.trabalho-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+}
+
+.trabalho-header {
+    padding: 1rem;
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.trabalho-aluno {
+    display: flex;
+    align-items: center;
+}
+
+.trabalho-aluno img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 1rem;
+    border: 2px solid white;
+}
+
+.trabalho-content {
+    padding: 1rem;
+}
+
+.trabalho-descricao {
+    margin-bottom: 1rem;
+}
+
+.trabalho-links {
+    display: flex;
+    gap: 0.5rem;
+}
+
+/* Chance de aprovação */
+.chance-container {
+    text-align: center;
+    padding: 2rem;
+}
+
+.chance-valor {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.chance-mensagem {
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+    font-style: italic;
+}
+
+.chance-detalhes {
+    max-width: 600px;
+    margin: 0 auto;
+    text-align: left;
+}
+
+.chance-detalhes h4 {
+    margin-bottom: 1rem;
+    color: var(--dark-color);
+}
+
+.chance-lista {
+    list-style-type: none;
+    padding: 0;
+}
+
+.chance-lista li {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #eee;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .login-card {
+        padding: 1.5rem;
+    }
+    
+    .content-container {
+        padding: 1rem;
+    }
+    
+    .dashboard-content,
+    .aluno-content {
+        padding: 1.5rem;
+    }
+    
+    .aluno-header {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .aluno-avatar {
+        margin-right: 0;
+        margin-bottom: 1.5rem;
+    }
+    
+    .aluno-stats {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Animações */
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.pulse-animation {
+    animation: pulse 2s infinite;
+}
+
+/* Ícones de nível */
+.nivel-icon {
+    font-size: 1.5rem;
+    margin-right: 0.5rem;
+    vertical-align: middle;
+}
+
+/* Efeitos de hover */
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Personalização de elementos */
+.custom-icon {
+    max-width: 24px;
+    max-height: 24px;
+    vertical-align: middle;
+}
+
+.custom-gif {
+    max-width: 100%;
+    border-radius: var(--border-radius);
+}
