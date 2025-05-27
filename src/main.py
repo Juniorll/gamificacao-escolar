@@ -1,6 +1,6 @@
 import os
 from dotenv import load_dotenv
-from flask import Flask
+from flask import Flask, redirect, url_for, render_template
 from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
 
@@ -23,7 +23,7 @@ def create_app():
     # Configuração do banco de dados
     database_url = os.getenv('DATABASE_URL')
     if database_url:
-        # Supabase fornece URL no formato: postgresql://postgres:[PASSWORD]@[HOST]:[PORT]/postgres
+        # Supabase ou Render PostgreSQL fornece URL no formato: postgresql://postgres:[PASSWORD]@[HOST]:[PORT]/postgres
         app.config['SQLALCHEMY_DATABASE_URI'] = database_url
     else:
         # Configuração local para desenvolvimento
@@ -55,6 +55,16 @@ def create_app():
         def load_user(user_id):
             from src.models.database import Professor
             return Professor.query.get(int(user_id))
+        
+        # Adiciona rota raiz para redirecionar para a página de login
+        @app.route('/')
+        def index():
+            return redirect(url_for('auth.login'))
+        
+        # Rota alternativa para página inicial personalizada
+        @app.route('/home')
+        def home():
+            return render_template('index.html')
         
         # Cria tabelas do banco de dados se não existirem
         db.create_all()
