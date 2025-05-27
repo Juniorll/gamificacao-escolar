@@ -11,6 +11,9 @@ from src.routes.professor import professor_bp
 from src.routes.aluno import aluno_bp
 from src.routes.admin import admin_bp
 
+from dotenv import load_dotenv
+load_dotenv()
+
 app = Flask(__name__, static_folder=os.path.join(os.path.dirname(__file__), 'static'))
 app.config['SECRET_KEY'] = 'asdf#FGSgvasgf$5$WGT'
 app.config['SESSION_TYPE'] = 'filesystem'
@@ -28,9 +31,11 @@ app.register_blueprint(aluno_bp, url_prefix='/api/aluno')
 app.register_blueprint(admin_bp, url_prefix='/api/admin')
 
 # Configuração do banco de dados
-app.config['SQLALCHEMY_DATABASE_URI'] = f"mysql+pymysql://{os.getenv('DB_USERNAME', 'root')}:{os.getenv('DB_PASSWORD', 'password')}@{os.getenv('DB_HOST', 'localhost')}:{os.getenv('DB_PORT', '3306')}/{os.getenv('DB_NAME', 'mydb')}"
+database_url = os.getenv('DATABASE_URL', f"mysql+pymysql://{os.getenv('DB_USERNAME', 'root')}:{os.getenv('DB_PASSWORD', 'password')}@{os.getenv('DB_HOST', 'localhost')}:{os.getenv('DB_PORT', '3306')}/{os.getenv('DB_NAME', 'mydb')}")
+app.config['SQLALCHEMY_DATABASE_URI'] = database_url
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db.init_app(app)
+
 
 # Criação das tabelas do banco de dados
 with app.app_context():
@@ -54,4 +59,5 @@ def serve(path):
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    port = int(os.getenv('PORT', 5000))
+    app.run(host='0.0.0.0', port=port, debug=False)
