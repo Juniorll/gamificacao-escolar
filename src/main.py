@@ -1,77 +1,68 @@
 import os
-import sys
-# DON'T CHANGE THIS !!!
-sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
-
-from flask import Flask, send_from_directory, jsonify, request, session
-from flask_login import LoginManager, login_required, current_user
-from src.models.database import db
-from src.routes.auth import auth_bp
-from src.routes.professor import professor_bp
-from src.routes.aluno import aluno_bp
-from src.routes.admin import admin_bp
-
 from dotenv import load_dotenv
+from flask import Flask
+from flask_login import LoginManager
+from flask_sqlalchemy import SQLAlchemy
+
+# Carrega variáveis de ambiente
 load_dotenv()
 
-app = Flask(__name__, static_folder=os.path.join(os.path.dirname(__file__), 'static'))
-app.config['SECRET_KEY'] = 'asdf#FGSgvasgf$5$WGT'
-app.config['SESSION_TYPE'] = 'filesystem'
-app.config['PERMANENT_SESSION_LIFETIME'] = 3600  # 1 hora
-
-# Configuração do login
+# Inicializa extensões sem vincular a um aplicativo específico
+db = SQLAlchemy()
 login_manager = LoginManager()
-login_manager.init_app(app)
-login_manager.login_view = 'auth.login'
 
-# Função para carregar o usuário pelo ID (necessário para o Flask-Login)
-@login_manager.user_loader
-def load_user(user_id):
+def create_app():
     """
-    Função para carregar o usuário pelo ID.
-    Necessária para o funcionamento do Flask-Login.
+    Função de fábrica de aplicativo que cria e configura a instância do Flask.
     """
-    from src.models.database import Professor
-    return Professor.query.get(int(user_id))
-
-# Registro dos blueprints
-app.register_blueprint(auth_bp, url_prefix='/api/auth')
-app.register_blueprint(professor_bp, url_prefix='/api/professor')
-app.register_blueprint(aluno_bp, url_prefix='/api/aluno')
-app.register_blueprint(admin_bp, url_prefix='/api/admin')
-
-# Configuração do banco de dados
-database_url = os.getenv('DATABASE_URL')
-if database_url:
-    # Supabase fornece URL no formato: postgresql://postgres:[PASSWORD]@[HOST]:[PORT]/postgres
-    app.config['SQLALCHEMY_DATABASE_URI'] = database_url
-else:
-    # Configuração local para desenvolvimento
-    app.config['SQLALCHEMY_DATABASE_URI'] = f"postgresql://{os.getenv('DB_USERNAME', 'postgres')}:{os.getenv('DB_PASSWORD', 'password')}@{os.getenv('DB_HOST', 'localhost')}:{os.getenv('DB_PORT', '5432')}/{os.getenv('DB_NAME', 'postgres')}"
-
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-db.init_app(app)
-
-# Criação das tabelas do banco de dados
-with app.app_context():
-    db.create_all()
-
-@app.route('/', defaults={'path': ''})
-@app.route('/<path:path>')
-def serve(path):
-    static_folder_path = app.static_folder
-    if static_folder_path is None:
-            return "Static folder not configured", 404
-
-    if path != "" and os.path.exists(os.path.join(static_folder_path, path)):
-        return send_from_directory(static_folder_path, path)
+    app = Flask(__name__)
+    
+    # Configuração do aplicativo
+    app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'chave-secreta-padrao')
+    
+    # Configuração do banco de dados
+    database_url = os.getenv('DATABASE_URL')
+    if database_url:
+        # Supabase fornece URL no formato: postgresql://postgres:[PASSWORD]@[HOST]:[PORT]/postgres
+        app.config['SQLALCHEMY_DATABASE_URI'] = database_url
     else:
-        index_path = os.path.join(static_folder_path, 'index.html')
-        if os.path.exists(index_path):
-            return send_from_directory(static_folder_path, 'index.html')
-        else:
-            return "index.html not found", 404
+        # Configuração local para desenvolvimento
+        app.config['SQLALCHEMY_DATABASE_URI'] = f"postgresql://{os.getenv('DB_USERNAME', 'postgres')}:{os.getenv('DB_PASSWORD', 'password')}@{os.getenv('DB_HOST', 'localhost')}:{os.getenv('DB_PORT', '5432')}/{os.getenv('DB_NAME', 'postgres')}"
+    
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    
+    # Inicializa extensões com o aplicativo
+    db.init_app(app)
+    login_manager.init_app(app)
+    login_manager.login_view = 'auth.login'
+    
+    # Importa e registra blueprints
+    with app.app_context():
+        # Importações dentro do contexto para evitar erros de contexto
+        from src.routes.auth import auth_bp
+        from src.routes.professor import professor_bp
+        from src.routes.aluno import aluno_bp
+        from src.routes.admin import admin_bp
+        
+        # Registra blueprints
+        app.register_blueprint(auth_bp)
+        app.register_blueprint(professor_bp)
+        app.register_blueprint(aluno_bp)
+        app.register_blueprint(admin_bp)
+        
+        # Configura o carregador de usuário
+        @login_manager.user_loader
+        def load_user(user_id):
+            from src.models.database import Professor
+            return Professor.query.get(int(user_id))
+        
+        # Cria tabelas do banco de dados se não existirem
+        db.create_all()
+    
+    return app
 
+# Cria a instância do aplicativo para uso com Gunicorn
+app = create_app()
 
 if __name__ == '__main__':
     port = int(os.getenv('PORT', 5000))
