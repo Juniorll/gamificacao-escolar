@@ -31,11 +31,16 @@ app.register_blueprint(aluno_bp, url_prefix='/api/aluno')
 app.register_blueprint(admin_bp, url_prefix='/api/admin')
 
 # Configuração do banco de dados
-database_url = os.getenv('DATABASE_URL', f"mysql+pymysql://{os.getenv('DB_USERNAME', 'root')}:{os.getenv('DB_PASSWORD', 'password')}@{os.getenv('DB_HOST', 'localhost')}:{os.getenv('DB_PORT', '3306')}/{os.getenv('DB_NAME', 'mydb')}")
-app.config['SQLALCHEMY_DATABASE_URI'] = database_url
+database_url = os.getenv('DATABASE_URL')
+if database_url:
+    # Supabase fornece URL no formato: postgresql://postgres:[PASSWORD]@[HOST]:[PORT]/postgres
+    app.config['SQLALCHEMY_DATABASE_URI'] = database_url
+else:
+    # Configuração local para desenvolvimento
+    app.config['SQLALCHEMY_DATABASE_URI'] = f"postgresql://{os.getenv('DB_USERNAME', 'postgres')}:{os.getenv('DB_PASSWORD', 'password')}@{os.getenv('DB_HOST', 'localhost')}:{os.getenv('DB_PORT', '5432')}/{os.getenv('DB_NAME', 'postgres')}"
+
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db.init_app(app)
-
 
 # Criação das tabelas do banco de dados
 with app.app_context():
