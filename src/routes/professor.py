@@ -309,7 +309,8 @@ def aluno_novo():
         flash('Aluno cadastrado com sucesso!', 'success')
         return redirect(url_for('professor.alunos'))
     
-    return render_template('professor/aluno_form.html', turmas=turmas)
+    # return render_template('professor/aluno_form.html', turmas=turmas)
+    return render_template('professor/aluno_form.html', colegios=colegios)
 
 @professor_bp.route('/aluno/importar', methods=['GET', 'POST'])
 @login_required
