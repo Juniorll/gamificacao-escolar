@@ -31,6 +31,9 @@ class Turma(db.Model):
     colegio_id = db.Column(db.Integer, db.ForeignKey('colegio.id'), nullable=False)
     data_cadastro = db.Column(db.DateTime, default=db.func.current_timestamp())
 
+    colegio = db.relationship('Colegio', backref='turmas')
+    alunos = db.relationship('Aluno', backref='turma', lazy='dynamic')
+
 class Periodo(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     nome = db.Column(db.String(100), nullable=False)
