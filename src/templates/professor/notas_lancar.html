@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lançamento de Notas - Sistema de Gamificação Escolar</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4e73df;
+            --secondary-color: #1cc88a;
+            --accent-color: #f6c23e;
+            --danger-color: #e74a3b;
+            --dark-color: #5a5c69;
+            --light-color: #f8f9fc;
+        }
+        
+        body {
+            background-color: #f8f9fc;
+            font-family: 'Nunito', sans-serif;
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background: linear-gradient(180deg, var(--primary-color) 10%, #224abe 100%);
+            color: white;
+            min-height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 100;
+            transition: all 0.3s;
+        }
+        
+        .sidebar-brand {
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem 1rem;
+            font-size: 1.2rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.05rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .sidebar-brand i {
+            margin-right: 0.5rem;
+            font-size: 1.1rem;
+        }
+        
+        .sidebar-menu {
+            padding: 1rem 0;
+        }
+        
+        .menu-item {
+            display: flex;
+            align-items: center;
+            padding: 0.8rem 1.5rem;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        
+        .menu-item:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+        
+        .menu-item.active {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-weight: 700;
+        }
+        
+        .menu-item i {
+            margin-right: 0.8rem;
+            width: 20px;
+            text-align: center;
+        }
+        
+        .sidebar-divider {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin: 1rem 0;
+        }
+        
+        .sidebar-heading {
+            padding: 0 1.5rem;
+            font-size: 0.7rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.1rem;
+            color: rgba(255, 255, 255, 0.4);
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: 250px;
+            padding: 1.5rem;
+            transition: all 0.3s;
+        }
+        
+        .navbar {
+            background-color: white;
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+            margin-bottom: 1.5rem;
+            border-radius: 0.5rem;
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+            color: var(--dark-color);
+        }
+        
+        .navbar-toggler {
+            border: none;
+            font-size: 1.2rem;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 0.5rem;
+        }
+        
+        .user-name {
+            font-weight: 700;
+            color: var(--dark-color);
+        }
+        
+        /* Cards */
+        .card {
+            border: none;
+            border-radius: 0.5rem;
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+            margin-bottom: 1.5rem;
+        }
+        
+        .card-header {
+            background-color: white;
+            border-bottom: 1px solid #e3e6f0;
+            padding: 1rem 1.25rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .card-header i {
+            color: var(--primary-color);
+            margin-right: 0.5rem;
+        }
+        
+        /* Table */
+        .table th {
+            background-color: var(--light-color);
+            color: var(--dark-color);
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 0.05em;
+        }
+        
+        .table-row {
+            transition: all 0.2s;
+        }
+        
+        .table-row:hover {
+            background-color: rgba(78, 115, 223, 0.05);
+        }
+        
+        /* Nota Styles */
+        .nota-input {
+            width: 70px;
+            text-align: center;
+            font-weight: 700;
+        }
+        
+        .nota-badge {
+            width: 70px;
+            text-align: center;
+            font-weight: 700;
+            padding: 0.5rem;
+            border-radius: 0.25rem;
+        }
+        
+        .nota-excelente {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+        
+        .nota-boa {
+            background-color: var(--accent-color);
+            color: white;
+        }
+        
+        .nota-regular {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .nota-baixa {
+            background-color: var(--danger-color);
+            color: white;
+        }
+        
+        .aluno-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        
+        .aluno-avatar-placeholder {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--light-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--dark-color);
+        }
+        
+        .aluno-info {
+            display: flex;
+            align-items: center;
+        }
+        
+        .aluno-nome {
+            margin-left: 0.5rem;
+            font-weight: 600;
+        }
+        
+        /* Atividade Info */
+        .atividade-info {
+            background-color: rgba(78, 115, 223, 0.05);
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .atividade-titulo {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .atividade-descricao {
+            margin-bottom: 1rem;
+            color: var(--dark-color);
+        }
+        
+        .atividade-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .atividade-meta-item {
+            display: flex;
+            align-items: center;
+            font-size: 0.9rem;
+            color: var(--dark-color);
+        }
+        
+        .atividade-meta-item i {
+            margin-right: 0.3rem;
+            color: var(--primary-color);
+        }
+        
+        .atividade-xp {
+            background-color: var(--accent-color);
+            color: white;
+            border-radius: 1rem;
+            padding: 0.2rem 0.8rem;
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+        
+        /* Footer */
+        .footer {
+            padding: 1.5rem 0;
+            color: #858796;
+            text-align: center;
+            font-size: 0.8rem;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                margin-left: -250px;
+            }
+            
+            .sidebar.active {
+                margin-left: 0;
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .main-content.active {
+                margin-left: 250px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-brand">
+            <i class="fas fa-gamepad"></i>
+            <span>Gamificação</span>
+        </div>
+        
+        <div class="sidebar-menu">
+            <a href="{{ url_for('professor.dashboard') }}" class="menu-item">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>Dashboard</span>
+            </a>
+            
+            <div class="sidebar-divider"></div>
+            <div class="sidebar-heading">Gestão Escolar</div>
+            
+            <a href="{{ url_for('professor.colegios') }}" class="menu-item">
+                <i class="fas fa-school"></i>
+                <span>Colégios</span>
+            </a>
+            
+            <a href="{{ url_for('professor.turmas') }}" class="menu-item">
+                <i class="fas fa-users"></i>
+                <span>Turmas</span>
+            </a>
+            
+            <a href="{{ url_for('professor.disciplinas') }}" class="menu-item">
+                <i class="fas fa-book"></i>
+                <span>Disciplinas</span>
+            </a>
+            
+            <a href="{{ url_for('professor.periodos') }}" class="menu-item">
+                <i class="fas fa-calendar-alt"></i>
+                <span>Períodos</span>
+            </a>
+            
+            <div class="sidebar-divider"></div>
+            <div class="sidebar-heading">Alunos e Atividades</div>
+            
+            <a href="{{ url_for('professor.alunos') }}" class="menu-item">
+                <i class="fas fa-user-graduate"></i>
+                <span>Alunos</span>
+            </a>
+            
+            <a href="{{ url_for('professor.atividades') }}" class="menu-item">
+                <i class="fas fa-tasks"></i>
+                <span>Atividades</span>
+            </a>
+            
+            <a href="{{ url_for('professor.notas') }}" class="menu-item active">
+                <i class="fas fa-star"></i>
+                <span>Notas</span>
+            </a>
+            
+            <a href="{{ url_for('professor.trabalhos') }}" class="menu-item">
+                <i class="fas fa-trophy"></i>
+                <span>Trabalhos Exemplares</span>
+            </a>
+            
+            <div class="sidebar-divider"></div>
+            <div class="sidebar-heading">Configurações</div>
+            
+            <a href="{{ url_for('professor.configuracoes') }}" class="menu-item">
+                <i class="fas fa-cog"></i>
+                <span>Configurações</span>
+            </a>
+            
+            <a href="{{ url_for('auth.logout') }}" class="menu-item">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Sair</span>
+            </a>
+        </div>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="main-content">
+        <nav class="navbar navbar-expand-lg navbar-light mb-4">
+            <div class="container-fluid">
+                <button id="sidebarToggle" class="navbar-toggler" type="button">
+                    <i class="fas fa-bars"></i>
+                </button>
+                
+                <a class="navbar-brand" href="{{ url_for('professor.dashboard') }}">
+                    Lançamento de Notas
+                </a>
+                
+                <div class="user-info ms-auto">
+                    <div class="user-avatar">
+                        {{ current_user.nome[0] }}
+                    </div>
+                    <div class="user-name">
+                        {{ current_user.nome }}
+                    </div>
+                </div>
+            </div>
+        </nav>
+        
+        <div class="container-fluid">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="h3 mb-0 text-gray-800">Lançamento de Notas</h1>
+                <a href="{{ url_for('professor.notas') }}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left me-1"></i>
+                    Voltar
+                </a>
+            </div>
+            
+            <!-- Informações da Atividade -->
+            <div class="atividade-info">
+                <div class="atividade-titulo">{{ atividade.titulo }}</div>
+                <div class="atividade-descricao">{{ atividade.descricao }}</div>
+                <div class="atividade-meta">
+                    <div class="atividade-meta-item">
+                        <i class="fas {{ atividade.disciplina.icone }}"></i>
+                        {{ atividade.disciplina.nome }}
+                    </div>
+                    <div class="atividade-meta-item">
+                        <i class="fas fa-users"></i>
+                        {{ atividade.turma.nome }}
+                    </div>
+                    <div class="atividade-meta-item">
+                        <i class="fas fa-calendar-alt"></i>
+                        {{ atividade.periodo.nome }}
+                    </div>
+                    <div class="atividade-meta-item">
+                        <i class="fas fa-calendar-day"></i>
+                        {{ atividade.data_entrega.strftime('%d/%m/%Y') }}
+                    </div>
+                    <div class="atividade-meta-item">
+                        <span class="atividade-xp">{{ atividade.xp }} XP</span>
+                    </div>
+                </div>
+                <div class="alert alert-info mt-3 mb-0">
+                    <i class="fas fa-info-circle me-1"></i>
+                    Nota máxima: <strong>{{ atividade.nota_maxima }}</strong> | 
+                    Peso: <strong>{{ atividade.peso }}</strong> | 
+                    Tipo: <strong>{{ atividade.tipo }}</strong> | 
+                    Dificuldade: <strong>
+                        {% if atividade.dificuldade == 1 %}Fácil
+                        {% elif atividade.dificuldade == 2 %}Média
+                        {% elif atividade.dificuldade == 3 %}Difícil
+                        {% elif atividade.dificuldade == 4 %}Muito Difícil
+                        {% elif atividade.dificuldade == 5 %}Desafiadora
+                        {% endif %}
+                    </strong>
+                </div>
+            </div>
+            
+            <!-- Formulário de Notas -->
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <i class="fas fa-star"></i>
+                        Notas dos Alunos
+                    </div>
+                    <div>
+                        <button type="button" class="btn btn-sm btn-success" id="btnSalvarTodas">
+                            <i class="fas fa-save me-1"></i>
+                            Salvar Todas as Notas
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <form id="formNotas" method="post" action="{{ url_for('professor.notas_salvar', atividade_id=atividade.id) }}">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Aluno</th>
+                                        <th>Nota</th>
+                                        <th>XP</th>
+                                        <th>Comentário</th>
+                                        <th>Trabalho Exemplar</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for aluno in alunos %}
+                                    <tr class="table-row">
+                                        <td>
+                                            <div class="aluno-info">
+                                                {% if aluno.foto %}
+                                                <img src="{{ aluno.foto }}" class="aluno-avatar" alt="{{ aluno.nome }}">
+                                                {% else %}
+                                                <div class="aluno-avatar-placeholder">
+                                                    {{ aluno.nome[0] }}
+                                                </div>
+                                                {% endif %}
+                                                <div class="aluno-nome">{{ aluno.nome }}</div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <input type="number" class="form-control nota-input" 
+                                                   name="nota_{{ aluno.id }}" 
+                                                   id="nota_{{ aluno.id }}" 
+                                                   value="{{ notas[aluno.id].nota if aluno.id in notas else '' }}" 
+                                                   min="0" 
+                                                   max="{{ atividade.nota_maxima }}" 
+                                                   step="0.1"
+                                                   onchange="calcularXP({{ aluno.id }})">
+                                        </td>
+                                        <td>
+                                            <span id="xp_{{ aluno.id }}" class="nota-badge nota-regular">
+                                                {% if aluno.id in notas %}
+                                                {{ notas[aluno.id].xp }}
+                                                {% else %}
+                                                0
+                                                {% endif %}
+                                            </span>
+                                            <input type="hidden" name="xp_{{ aluno.id }}" id="xp_hidden_{{ aluno.id }}" 
+                                                   value="{{ notas[aluno.id].xp if aluno.id in notas else '0' }}">
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control" 
+                                                   name="comentario_{{ aluno.id }}" 
+                                                   value="{{ notas[aluno.id].comentario if aluno.id in notas else '' }}" 
+                                                   placeholder="Comentário opcional">
+                                        </td>
+                                        <td class="text-center">
+                                            <div class="form-check form-switch d-flex justify-content-center">
+                                                <input class="form-check-input" type="checkbox" 
+                                                       name="exemplar_{{ aluno.id }}" 
+                                                       id="exemplar_{{ aluno.id }}"
+                                                       {% if aluno.id in notas and notas[aluno.id].exemplar %}checked{% endif %}>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <div class="d-flex justify-content-end mt-4">
+                            <a href="{{ url_for('professor.notas') }}" class="btn btn-secondary me-2">Cancelar</a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-1"></i>
+                                Salvar Notas
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <footer class="footer">
+            <div class="container-fluid">
+                <span>Sistema de Gamificação Escolar &copy; 2025. Todos os direitos reservados.</span>
+            </div>
+        </footer>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Toggle sidebar
+        document.getElementById('sidebarToggle').addEventListener('click', function() {
+            document.querySelector('.sidebar').classList.toggle('active');
+            document.querySelector('.main-content').classList.toggle('active');
+        });
+        
+        // Calcular XP com base na nota
+        function calcularXP(alunoId) {
+            const notaInput = document.getElementById(`nota_${alunoId}`);
+            const xpSpan = document.getElementById(`xp_${alunoId}`);
+            const xpHidden = document.getElementById(`xp_hidden_${alunoId}`);
+            
+            const nota = parseFloat(notaInput.value) || 0;
+            const notaMaxima = {{ atividade.nota_maxima }};
+            const atividadeXP = {{ atividade.xp }};
+            
+            // Cálculo do XP proporcional à nota
+            const percentual = nota / notaMaxima;
+            const xp = Math.round(atividadeXP * percentual);
+            
+            // Atualizar valores
+            xpSpan.textContent = xp;
+            xpHidden.value = xp;
+            
+            // Atualizar classe do badge
+            xpSpan.className = 'nota-badge';
+            if (percentual >= 0.9) {
+                xpSpan.classList.add('nota-excelente');
+            } else if (percentual >= 0.7) {
+                xpSpan.classList.add('nota-boa');
+            } else if (percentual >= 0.5) {
+                xpSpan.classList.add('nota-regular');
+            } else {
+                xpSpan.classList.add('nota-baixa');
+            }
+        }
+        
+        // Botão para salvar todas as notas
+        document.getElementById('btnSalvarTodas').addEventListener('click', function() {
+            document.getElementById('formNotas').submit();
+        });
+        
+        // Inicializar XP para todos os alunos
+        document.addEventListener('DOMContentLoaded', function() {
+            {% for aluno in alunos %}
+            calcularXP({{ aluno.id }});
+            {% endfor %}
+        });
+    </script>
+</body>
+</html>
