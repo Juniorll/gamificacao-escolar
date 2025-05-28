@@ -280,8 +280,9 @@ def alunos():
     turmas = Turma.query.filter_by(professor_id=current_user.id).all()
     turma_ids = [turma.id for turma in turmas]
     alunos = Aluno.query.filter(Aluno.turma_id.in_(turma_ids)).all()
+    colegios = Colegio.query.join(Turma).filter(Turma.professor_id == current_user.id).distinct().all()
     
-    return render_template('professor/alunos.html', alunos=alunos, turmas=turmas)
+    return render_template('professor/alunos.html', alunos=alunos, turmas=turmas, colegios=colegios)
 
 @professor_bp.route('/aluno/novo', methods=['GET', 'POST'])
 @login_required
