@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configurações - Sistema de Gamificação Escolar</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4e73df;
+            --secondary-color: #1cc88a;
+            --accent-color: #f6c23e;
+            --danger-color: #e74a3b;
+            --dark-color: #5a5c69;
+            --light-color: #f8f9fc;
+        }
+        
+        body {
+            background-color: #f8f9fc;
+            font-family: 'Nunito', sans-serif;
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background: linear-gradient(180deg, var(--primary-color) 10%, #224abe 100%);
+            color: white;
+            min-height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 100;
+            transition: all 0.3s;
+        }
+        
+        .sidebar-brand {
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem 1rem;
+            font-size: 1.2rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.05rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .sidebar-brand i {
+            margin-right: 0.5rem;
+            font-size: 1.1rem;
+        }
+        
+        .sidebar-menu {
+            padding: 1rem 0;
+        }
+        
+        .menu-item {
+            display: flex;
+            align-items: center;
+            padding: 0.8rem 1.5rem;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        
+        .menu-item:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+        
+        .menu-item.active {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-weight: 700;
+        }
+        
+        .menu-item i {
+            margin-right: 0.8rem;
+            width: 20px;
+            text-align: center;
+        }
+        
+        .sidebar-divider {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin: 1rem 0;
+        }
+        
+        .sidebar-heading {
+            padding: 0 1.5rem;
+            font-size: 0.7rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.1rem;
+            color: rgba(255, 255, 255, 0.4);
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: 250px;
+            padding: 1.5rem;
+            transition: all 0.3s;
+        }
+        
+        .navbar {
+            background-color: white;
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+            margin-bottom: 1.5rem;
+            border-radius: 0.5rem;
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+            color: var(--dark-color);
+        }
+        
+        .navbar-toggler {
+            border: none;
+            font-size: 1.2rem;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 0.5rem;
+        }
+        
+        .user-name {
+            font-weight: 700;
+            color: var(--dark-color);
+        }
+        
+        /* Cards */
+        .card {
+            border: none;
+            border-radius: 0.5rem;
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+            margin-bottom: 1.5rem;
+        }
+        
+        .card-header {
+            background-color: white;
+            border-bottom: 1px solid #e3e6f0;
+            padding: 1rem 1.25rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .card-header i {
+            color: var(--primary-color);
+            margin-right: 0.5rem;
+        }
+        
+        /* Config Tabs */
+        .nav-tabs {
+            border-bottom: 1px solid #e3e6f0;
+        }
+        
+        .nav-tabs .nav-link {
+            border: none;
+            color: var(--dark-color);
+            font-weight: 600;
+            padding: 1rem 1.5rem;
+        }
+        
+        .nav-tabs .nav-link:hover {
+            border-color: transparent;
+            color: var(--primary-color);
+        }
+        
+        .nav-tabs .nav-link.active {
+            color: var(--primary-color);
+            background-color: transparent;
+            border-bottom: 3px solid var(--primary-color);
+        }
+        
+        /* Color Picker */
+        .color-option {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 0.5rem;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+        
+        .color-option.selected {
+            border-color: var(--dark-color);
+        }
+        
+        .color-picker-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        /* Icon Picker */
+        .icon-option {
+            width: 40px;
+            height: 40px;
+            border-radius: 0.25rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+            border: 2px solid transparent;
+            background-color: var(--light-color);
+        }
+        
+        .icon-option.selected {
+            border-color: var(--primary-color);
+            background-color: rgba(78, 115, 223, 0.1);
+        }
+        
+        .icon-picker-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        /* Footer */
+        .footer {
+            padding: 1.5rem 0;
+            color: #858796;
+            text-align: center;
+            font-size: 0.8rem;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                margin-left: -250px;
+            }
+            
+            .sidebar.active {
+                margin-left: 0;
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .main-content.active {
+                margin-left: 250px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-brand">
+            <i class="fas fa-gamepad"></i>
+            <span>Gamificação</span>
+        </div>
+        
+        <div class="sidebar-menu">
+            <a href="{{ url_for('professor.dashboard') }}" class="menu-item">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>Dashboard</span>
+            </a>
+            
+            <div class="sidebar-divider"></div>
+            <div class="sidebar-heading">Gestão Escolar</div>
+            
+            <a href="{{ url_for('professor.colegios') }}" class="menu-item">
+                <i class="fas fa-school"></i>
+                <span>Colégios</span>
+            </a>
+            
+            <a href="{{ url_for('professor.turmas') }}" class="menu-item">
+                <i class="fas fa-users"></i>
+                <span>Turmas</span>
+            </a>
+            
+            <a href="{{ url_for('professor.disciplinas') }}" class="menu-item">
+                <i class="fas fa-book"></i>
+                <span>Disciplinas</span>
+            </a>
+            
+            <a href="{{ url_for('professor.periodos') }}" class="menu-item">
+                <i class="fas fa-calendar-alt"></i>
+                <span>Períodos</span>
+            </a>
+            
+            <div class="sidebar-divider"></div>
+            <div class="sidebar-heading">Alunos e Atividades</div>
+            
+            <a href="{{ url_for('professor.alunos') }}" class="menu-item">
+                <i class="fas fa-user-graduate"></i>
+                <span>Alunos</span>
+            </a>
+            
+            <a href="{{ url_for('professor.atividades') }}" class="menu-item">
+                <i class="fas fa-tasks"></i>
+                <span>Atividades</span>
+            </a>
+            
+            <a href="{{ url_for('professor.notas') }}" class="menu-item">
+                <i class="fas fa-star"></i>
+                <span>Notas</span>
+            </a>
+            
+            <a href="{{ url_for('professor.trabalhos') }}" class="menu-item">
+                <i class="fas fa-trophy"></i>
+                <span>Trabalhos Exemplares</span>
+            </a>
+            
+            <div class="sidebar-divider"></div>
+            <div class="sidebar-heading">Configurações</div>
+            
+            <a href="{{ url_for('professor.configuracoes') }}" class="menu-item active">
+                <i class="fas fa-cog"></i>
+                <span>Configurações</span>
+            </a>
+            
+            <a href="{{ url_for('auth.logout') }}" class="menu-item">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Sair</span>
+            </a>
+        </div>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="main-content">
+        <nav class="navbar navbar-expand-lg navbar-light mb-4">
+            <div class="container-fluid">
+                <button id="sidebarToggle" class="navbar-toggler" type="button">
+                    <i class="fas fa-bars"></i>
+                </button>
+                
+                <a class="navbar-brand" href="{{ url_for('professor.dashboard') }}">
+                    Configurações
+                </a>
+                
+                <div class="user-info ms-auto">
+                    <div class="user-avatar">
+                        {{ current_user.nome[0] }}
+                    </div>
+                    <div class="user-name">
+                        {{ current_user.nome }}
+                    </div>
+                </div>
+            </div>
+        </nav>
+        
+        <div class="container-fluid">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="h3 mb-0 text-gray-800">Configurações</h1>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <i class="fas fa-cog"></i>
+                        Configurações do Sistema
+                    </div>
+                </div>
+                <div class="card-body">
+                    <ul class="nav nav-tabs" id="configTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="perfil-tab" data-bs-toggle="tab" data-bs-target="#perfil" type="button" role="tab" aria-controls="perfil" aria-selected="true">
+                                <i class="fas fa-user me-1"></i>
+                                Perfil
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="gamificacao-tab" data-bs-toggle="tab" data-bs-target="#gamificacao" type="button" role="tab" aria-controls="gamificacao" aria-selected="false">
+                                <i class="fas fa-gamepad me-1"></i>
+                                Gamificação
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="visual-tab" data-bs-toggle="tab" data-bs-target="#visual" type="button" role="tab" aria-controls="visual" aria-selected="false">
+                                <i class="fas fa-palette me-1"></i>
+                                Visual
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="notificacoes-tab" data-bs-toggle="tab" data-bs-target="#notificacoes" type="button" role="tab" aria-controls="notificacoes" aria-selected="false">
+                                <i class="fas fa-bell me-1"></i>
+                                Notificações
+                            </button>
+                        </li>
+                    </ul>
+                    <div class="tab-content p-4" id="configTabsContent">
+                        <!-- Perfil -->
+                        <div class="tab-pane fade show active" id="perfil" role="tabpanel" aria-labelledby="perfil-tab">
+                            <form method="post" action="{{ url_for('professor.configuracoes_perfil') }}">
+                                <div class="mb-3">
+                                    <label for="nome" class="form-label">Nome</label>
+                                    <input type="text" class="form-control" id="nome" name="nome" value="{{ current_user.nome }}" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="email" class="form-label">Email</label>
+                                    <input type="email" class="form-control" id="email" name="email" value="{{ current_user.email }}" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="senha_atual" class="form-label">Senha Atual</label>
+                                    <input type="password" class="form-control" id="senha_atual" name="senha_atual">
+                                    <div class="form-text">Deixe em branco se não quiser alterar a senha.</div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="nova_senha" class="form-label">Nova Senha</label>
+                                    <input type="password" class="form-control" id="nova_senha" name="nova_senha">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="confirmar_senha" class="form-label">Confirmar Nova Senha</label>
+                                    <input type="password" class="form-control" id="confirmar_senha" name="confirmar_senha">
+                                </div>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-save me-1"></i>
+                                    Salvar Alterações
+                                </button>
+                            </form>
+                        </div>
+                        
+                        <!-- Gamificação -->
+                        <div class="tab-pane fade" id="gamificacao" role="tabpanel" aria-labelledby="gamificacao-tab">
+                            <form method="post" action="{{ url_for('professor.configuracoes_gamificacao') }}">
+                                <div class="mb-3">
+                                    <label for="xp_base" class="form-label">XP Base para Atividades</label>
+                                    <input type="number" class="form-control" id="xp_base" name="xp_base" value="{{ config.xp_base }}" min="10" max="1000" required>
+                                    <div class="form-text">Valor base de XP para cálculo em atividades.</div>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="niveis_config" class="form-label">Configuração de Níveis</label>
+                                    <textarea class="form-control" id="niveis_config" name="niveis_config" rows="5" required>{{ config.niveis_config }}</textarea>
+                                    <div class="form-text">Configure os níveis no formato "Nível:XP Necessário" (um por linha). Exemplo: "Iniciante:0".</div>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="categorias_config" class="form-label">Configuração de Categorias</label>
+                                    <textarea class="form-control" id="categorias_config" name="categorias_config" rows="5" required>{{ config.categorias_config }}</textarea>
+                                    <div class="form-text">Configure as categorias no formato "Categoria:Média Mínima" (uma por linha). Exemplo: "Lendário:9.0".</div>
+                                </div>
+                                
+                                <div class="mb-3 form-check">
+                                    <input type="checkbox" class="form-check-input" id="mostrar_ranking" name="mostrar_ranking" {% if config.mostrar_ranking %}checked{% endif %}>
+                                    <label class="form-check-label" for="mostrar_ranking">Mostrar Ranking Público</label>
+                                    <div class="form-text">Se ativado, o ranking de alunos será visível publicamente.</div>
+                                </div>
+                                
+                                <div class="mb-3 form-check">
+                                    <input type="checkbox" class="form-check-input" id="mostrar_chance_aprovacao" name="mostrar_chance_aprovacao" {% if config.mostrar_chance_aprovacao %}checked{% endif %}>
+                                    <label class="form-check-label" for="mostrar_chance_aprovacao">Mostrar Chance de Aprovação</label>
+                                    <div class="form-text">Se ativado, os alunos poderão ver sua chance de aprovação.</div>
+                                </div>
+                                
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-save me-1"></i>
+                                    Salvar Configurações
+                                </button>
+                            </form>
+                        </div>
+                        
+                        <!-- Visual -->
+                        <div class="tab-pane fade" id="visual" role="tabpanel" aria-labelledby="visual-tab">
+                            <form method="post" action="{{ url_for('professor.configuracoes_visual') }}">
+                                <div class="mb-3">
+                                    <label class="form-label">Cor Principal</label>
+                                    <div class="color-picker-container">
+                                        <div class="color-option selected" style="background-color: #4e73df;" data-color="#4e73df" onclick="selectColor(this)"></div>
+                                        <div class="color-option" style="background-color: #1cc88a;" data-color="#1cc88a" onclick="selectColor(this)"></div>
+                                        <div class="color-option" style="background-color: #f6c23e;" data-color="#f6c23e" onclick="selectColor(this)"></div>
+                                        <div class="color-option" style="background-color: #e74a3b;" data-color="#e74a3b" onclick="selectColor(this)"></div>
+                                        <div class="color-option" style="background-color: #36b9cc;" data-color="#36b9cc" onclick="selectColor(this)"></div>
+                                        <div class="color-option" style="background-color: #6f42c1;" data-color="#6f42c1" onclick="selectColor(this)"></div>
+                                        <div class="color-option" style="background-color: #5a5c69;" data-color="#5a5c69" onclick="selectColor(this)"></div>
+                                    </div>
+                                    <input type="hidden" id="cor_principal" name="cor_principal" value="{{ config.cor_principal }}">
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="logo" class="form-label">Logo do Sistema</label>
+                                    <input type="file" class="form-control" id="logo" name="logo">
+                                    <div class="form-text">Imagem para o logo do sistema. Tamanho recomendado: 200x50px.</div>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="favicon" class="form-label">Favicon</label>
+                                    <input type="file" class="form-control" id="favicon" name="favicon">
+                                    <div class="form-text">Ícone para a aba do navegador. Tamanho recomendado: 32x32px.</div>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="mensagem_boas_vindas" class="form-label">Mensagem de Boas-vindas</label>
+                                    <textarea class="form-control" id="mensagem_boas_vindas" name="mensagem_boas_vindas" rows="3">{{ config.mensagem_boas_vindas }}</textarea>
+                                    <div class="form-text">Mensagem exibida na página inicial para os alunos.</div>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label class="form-label">Ícone do Sistema</label>
+                                    <div class="icon-picker-container">
+                                        <div class="icon-option selected" data-icon="fa-gamepad" onclick="selectIcon(this)">
+                                            <i class="fas fa-gamepad"></i>
+                                        </div>
+                                        <div class="icon-option" data-icon="fa-graduation-cap" onclick="selectIcon(this)">
+                                            <i class="fas fa-graduation-cap"></i>
+                                        </div>
+                                        <div class="icon-option" data-icon="fa-trophy" onclick="selectIcon(this)">
+                                            <i class="fas fa-trophy"></i>
+                                        </div>
+                                        <div class="icon-option" data-icon="fa-star" onclick="selectIcon(this)">
+                                            <i class="fas fa-star"></i>
+                                        </div>
+                                        <div class="icon-option" data-icon="fa-award" onclick="selectIcon(this)">
+                                            <i class="fas fa-award"></i>
+                                        </div>
+                                        <div class="icon-option" data-icon="fa-medal" onclick="selectIcon(this)">
+                                            <i class="fas fa-medal"></i>
+                                        </div>
+                                        <div class="icon-option" data-icon="fa-crown" onclick="selectIcon(this)">
+                                            <i class="fas fa-crown"></i>
+                                        </div>
+                                        <div class="icon-option" data-icon="fa-school" onclick="selectIcon(this)">
+                                            <i class="fas fa-school"></i>
+                                        </div>
+                                    </div>
+                                    <input type="hidden" id="icone_sistema" name="icone_sistema" value="{{ config.icone_sistema }}">
+                                </div>
+                                
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-save me-1"></i>
+                                    Salvar Configurações
+                                </button>
+                            </form>
+                        </div>
+                        
+                        <!-- Notificações -->
+                        <div class="tab-pane fade" id="notificacoes" role="tabpanel" aria-labelledby="notificacoes-tab">
+                            <form method="post" action="{{ url_for('professor.configuracoes_notificacoes') }}">
+                                <div class="mb-3 form-check">
+                                    <input type="checkbox" class="form-check-input" id="notificar_novas_atividades" name="notificar_novas_atividades" {% if config.notificar_novas_atividades %}checked{% endif %}>
+                                    <label class="form-check-label" for="notificar_novas_atividades">Notificar Novas Atividades</label>
+                                    <div class="form-text">Enviar notificações aos alunos quando novas atividades forem cadastradas.</div>
+                                </div>
+                                
+                                <div class="mb-3 form-check">
+                                    <input type="checkbox" class="form-check-input" id="notificar_novas_notas" name="notificar_novas_notas" {% if config.notificar_novas_notas %}checked{% endif %}>
+                                    <label class="form-check-label" for="notificar_novas_notas">Notificar Novas Notas</label>
+                                    <div class="form-text">Enviar notificações aos alunos quando novas notas forem lançadas.</div>
+                                </div>
+                                
+                                <div class="mb-3 form-check">
+                                    <input type="checkbox" class="form-check-input" id="notificar_trabalhos_exemplares" name="notificar_trabalhos_exemplares" {% if config.notificar_trabalhos_exemplares %}checked{% endif %}>
+                                    <label class="form-check-label" for="notificar_trabalhos_exemplares">Notificar Trabalhos Exemplares</label>
+                                    <div class="form-text">Enviar notificações quando trabalhos forem marcados como exemplares.</div>
+                                </div>
+                                
+                                <div class="mb-3 form-check">
+                                    <input type="checkbox" class="form-check-input" id="notificar_novos_niveis" name="notificar_novos_niveis" {% if config.notificar_novos_niveis %}checked{% endif %}>
+                                    <label class="form-check-label" for="notificar_novos_niveis">Notificar Novos Níveis</label>
+                                    <div class="form-text">Enviar notificações aos alunos quando subirem de nível.</div>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="email_notificacoes" class="form-label">Email para Notificações</label>
+                                    <input type="email" class="form-control" id="email_notificacoes" name="email_notificacoes" value="{{ config.email_notificacoes }}">
+                                    <div class="form-text">Email para receber cópias das notificações enviadas aos alunos.</div>
+                                </div>
+                                
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-save me-1"></i>
+                                    Salvar Configurações
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <footer class="footer">
+            <div class="container-fluid">
+                <span>Sistema de Gamificação Escolar &copy; 2025. Todos os direitos reservados.</span>
+            </div>
+        </footer>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Toggle sidebar
+        document.getElementById('sidebarToggle').addEventListener('click', function() {
+            document.querySelector('.sidebar').classList.toggle('active');
+            document.querySelector('.main-content').classList.toggle('active');
+        });
+        
+        // Color picker
+        function selectColor(element) {
+            // Remove selected class from all options
+            document.querySelectorAll('.color-option').forEach(function(option) {
+                option.classList.remove('selected');
+            });
+            
+            // Add selected class to clicked option
+            element.classList.add('selected');
+            
+            // Update hidden input value
+            document.getElementById('cor_principal').value = element.getAttribute('data-color');
+        }
+        
+        // Icon picker
+        function selectIcon(element) {
+            // Remove selected class from all options
+            document.querySelectorAll('.icon-option').forEach(function(option) {
+                option.classList.remove('selected');
+            });
+            
+            // Add selected class to clicked option
+            element.classList.add('selected');
+            
+            // Update hidden input value
+            document.getElementById('icone_sistema').value = element.getAttribute('data-icon');
+        }
+        
+        // Initialize selected color and icon
+        document.addEventListener('DOMContentLoaded', function() {
+            const selectedColor = document.getElementById('cor_principal').value;
+            const selectedIcon = document.getElementById('icone_sistema').value;
+            
+            // Set selected color
+            if (selectedColor) {
+                document.querySelectorAll('.color-option').forEach(function(option) {
+                    if (option.getAttribute('data-color') === selectedColor) {
+                        option.classList.add('selected');
+                    } else {
+                        option.classList.remove('selected');
+                    }
+                });
+            }
+            
+            // Set selected icon
+            if (selectedIcon) {
+                document.querySelectorAll('.icon-option').forEach(function(option) {
+                    if (option.getAttribute('data-icon') === selectedIcon) {
+                        option.classList.add('selected');
+                    } else {
+                        option.classList.remove('selected');
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
