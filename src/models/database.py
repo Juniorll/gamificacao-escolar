@@ -32,7 +32,7 @@ class Turma(db.Model):
     data_cadastro = db.Column(db.DateTime, default=db.func.current_timestamp())
 
     colegio = db.relationship('Colegio', backref='turmas')
-    alunos = db.relationship('Aluno', backref='turma', lazy='dynamic')
+    alunos = db.relationship('Aluno', backref='turma', lazy='select')
 
 class Periodo(db.Model):
     id = db.Column(db.Integer, primary_key=True)
