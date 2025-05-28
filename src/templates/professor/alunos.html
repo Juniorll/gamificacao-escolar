@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alunos - Sistema de Gamificação Escolar</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4e73df;
+            --secondary-color: #1cc88a;
+            --accent-color: #f6c23e;
+            --danger-color: #e74a3b;
+            --dark-color: #5a5c69;
+            --light-color: #f8f9fc;
+        }
+        
+        body {
+            background-color: #f8f9fc;
+            font-family: 'Nunito', sans-serif;
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background: linear-gradient(180deg, var(--primary-color) 10%, #224abe 100%);
+            color: white;
+            min-height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 100;
+            transition: all 0.3s;
+        }
+        
+        .sidebar-brand {
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem 1rem;
+            font-size: 1.2rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.05rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .sidebar-brand i {
+            margin-right: 0.5rem;
+            font-size: 1.1rem;
+        }
+        
+        .sidebar-menu {
+            padding: 1rem 0;
+        }
+        
+        .menu-item {
+            display: flex;
+            align-items: center;
+            padding: 0.8rem 1.5rem;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        
+        .menu-item:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+        
+        .menu-item.active {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-weight: 700;
+        }
+        
+        .menu-item i {
+            margin-right: 0.8rem;
+            width: 20px;
+            text-align: center;
+        }
+        
+        .sidebar-divider {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin: 1rem 0;
+        }
+        
+        .sidebar-heading {
+            padding: 0 1.5rem;
+            font-size: 0.7rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.1rem;
+            color: rgba(255, 255, 255, 0.4);
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: 250px;
+            padding: 1.5rem;
+            transition: all 0.3s;
+        }
+        
+        .navbar {
+            background-color: white;
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+            margin-bottom: 1.5rem;
+            border-radius: 0.5rem;
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+            color: var(--dark-color);
+        }
+        
+        .navbar-toggler {
+            border: none;
+            font-size: 1.2rem;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 0.5rem;
+        }
+        
+        .user-name {
+            font-weight: 700;
+            color: var(--dark-color);
+        }
+        
+        /* Cards */
+        .card {
+            border: none;
+            border-radius: 0.5rem;
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+            margin-bottom: 1.5rem;
+        }
+        
+        .card-header {
+            background-color: white;
+            border-bottom: 1px solid #e3e6f0;
+            padding: 1rem 1.25rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .card-header i {
+            color: var(--primary-color);
+            margin-right: 0.5rem;
+        }
+        
+        /* Table */
+        .table th {
+            background-color: var(--light-color);
+            color: var(--dark-color);
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 0.05em;
+        }
+        
+        .table-row {
+            transition: all 0.2s;
+        }
+        
+        .table-row:hover {
+            background-color: rgba(78, 115, 223, 0.05);
+        }
+        
+        /* Aluno Card */
+        .aluno-card {
+            border-radius: 0.5rem;
+            overflow: hidden;
+            transition: all 0.3s;
+            height: 100%;
+        }
+        
+        .aluno-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0.5rem 1.5rem 0 rgba(58, 59, 69, 0.15);
+        }
+        
+        .aluno-avatar {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            background-color: #e9ecef;
+        }
+        
+        .aluno-info {
+            padding: 1rem;
+        }
+        
+        .aluno-nome {
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+        
+        .aluno-turma {
+            color: var(--dark-color);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .aluno-nivel {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+        
+        .nivel-badge {
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 1rem;
+            padding: 0.2rem 0.8rem;
+            font-size: 0.8rem;
+            font-weight: 700;
+            margin-right: 0.5rem;
+        }
+        
+        .xp-badge {
+            background-color: var(--accent-color);
+            color: white;
+            border-radius: 1rem;
+            padding: 0.2rem 0.8rem;
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+        
+        .aluno-acoes {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1rem;
+        }
+        
+        /* Filtros */
+        .filtros {
+            background-color: white;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+        }
+        
+        /* Footer */
+        .footer {
+            padding: 1.5rem 0;
+            color: #858796;
+            text-align: center;
+            font-size: 0.8rem;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                margin-left: -250px;
+            }
+            
+            .sidebar.active {
+                margin-left: 0;
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .main-content.active {
+                margin-left: 250px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-brand">
+            <i class="fas fa-gamepad"></i>
+            <span>Gamificação</span>
+        </div>
+        
+        <div class="sidebar-menu">
+            <a href="{{ url_for('professor.dashboard') }}" class="menu-item">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>Dashboard</span>
+            </a>
+            
+            <div class="sidebar-divider"></div>
+            <div class="sidebar-heading">Gestão Escolar</div>
+            
+            <a href="{{ url_for('professor.colegios') }}" class="menu-item">
+                <i class="fas fa-school"></i>
+                <span>Colégios</span>
+            </a>
+            
+            <a href="{{ url_for('professor.turmas') }}" class="menu-item">
+                <i class="fas fa-users"></i>
+                <span>Turmas</span>
+            </a>
+            
+            <a href="{{ url_for('professor.disciplinas') }}" class="menu-item">
+                <i class="fas fa-book"></i>
+                <span>Disciplinas</span>
+            </a>
+            
+            <a href="{{ url_for('professor.periodos') }}" class="menu-item">
+                <i class="fas fa-calendar-alt"></i>
+                <span>Períodos</span>
+            </a>
+            
+            <div class="sidebar-divider"></div>
+            <div class="sidebar-heading">Alunos e Atividades</div>
+            
+            <a href="{{ url_for('professor.alunos') }}" class="menu-item active">
+                <i class="fas fa-user-graduate"></i>
+                <span>Alunos</span>
+            </a>
+            
+            <a href="{{ url_for('professor.atividades') }}" class="menu-item">
+                <i class="fas fa-tasks"></i>
+                <span>Atividades</span>
+            </a>
+            
+            <a href="{{ url_for('professor.notas') }}" class="menu-item">
+                <i class="fas fa-star"></i>
+                <span>Notas</span>
+            </a>
+            
+            <a href="{{ url_for('professor.trabalhos') }}" class="menu-item">
+                <i class="fas fa-trophy"></i>
+                <span>Trabalhos Exemplares</span>
+            </a>
+            
+            <div class="sidebar-divider"></div>
+            <div class="sidebar-heading">Configurações</div>
+            
+            <a href="{{ url_for('professor.configuracoes') }}" class="menu-item">
+                <i class="fas fa-cog"></i>
+                <span>Configurações</span>
+            </a>
+            
+            <a href="{{ url_for('auth.logout') }}" class="menu-item">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Sair</span>
+            </a>
+        </div>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="main-content">
+        <nav class="navbar navbar-expand-lg navbar-light mb-4">
+            <div class="container-fluid">
+                <button id="sidebarToggle" class="navbar-toggler" type="button">
+                    <i class="fas fa-bars"></i>
+                </button>
+                
+                <a class="navbar-brand" href="{{ url_for('professor.dashboard') }}">
+                    Alunos
+                </a>
+                
+                <div class="user-info ms-auto">
+                    <div class="user-avatar">
+                        {{ current_user.nome[0] }}
+                    </div>
+                    <div class="user-name">
+                        {{ current_user.nome }}
+                    </div>
+                </div>
+            </div>
+        </nav>
+        
+        <div class="container-fluid">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="h3 mb-0 text-gray-800">Alunos</h1>
+                <div>
+                    <a href="{{ url_for('professor.aluno_importar') }}" class="btn btn-success me-2">
+                        <i class="fas fa-file-import me-1"></i>
+                        Importar Alunos
+                    </a>
+                    <a href="{{ url_for('professor.aluno_novo') }}" class="btn btn-primary">
+                        <i class="fas fa-plus me-1"></i>
+                        Novo Aluno
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Filtros -->
+            <div class="filtros mb-4">
+                <form method="get" action="{{ url_for('professor.alunos') }}">
+                    <div class="row g-3">
+                        <div class="col-md-3">
+                            <label for="colegio_id" class="form-label">Colégio</label>
+                            <select class="form-select" id="colegio_id" name="colegio_id">
+                                <option value="">Todos os colégios</option>
+                                {% for colegio in colegios %}
+                                <option value="{{ colegio.id }}" {% if request.args.get('colegio_id')|int == colegio.id %}selected{% endif %}>{{ colegio.nome }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="turma_id" class="form-label">Turma</label>
+                            <select class="form-select" id="turma_id" name="turma_id">
+                                <option value="">Todas as turmas</option>
+                                {% for turma in turmas %}
+                                <option value="{{ turma.id }}" {% if request.args.get('turma_id')|int == turma.id %}selected{% endif %}>{{ turma.nome }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="busca" class="form-label">Buscar</label>
+                            <input type="text" class="form-control" id="busca" name="busca" placeholder="Nome do aluno" value="{{ request.args.get('busca', '') }}">
+                        </div>
+                        <div class="col-md-3 d-flex align-items-end">
+                            <button type="submit" class="btn btn-primary w-100">
+                                <i class="fas fa-search me-1"></i>
+                                Filtrar
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            
+            <!-- Lista de Alunos -->
+            {% if alunos %}
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4">
+                {% for aluno in alunos %}
+                <div class="col">
+                    <div class="card aluno-card h-100">
+                        {% if aluno.foto %}
+                        <img src="{{ aluno.foto }}" class="aluno-avatar" alt="{{ aluno.nome }}">
+                        {% else %}
+                        <div class="aluno-avatar d-flex align-items-center justify-content-center">
+                            <i class="fas fa-user-graduate fa-3x text-muted"></i>
+                        </div>
+                        {% endif %}
+                        <div class="aluno-info">
+                            <div class="aluno-nome">{{ aluno.nome }}</div>
+                            <div class="aluno-turma">
+                                <i class="fas fa-users me-1"></i>
+                                {{ aluno.turma.nome }} - {{ aluno.turma.colegio.nome }}
+                            </div>
+                            <div class="aluno-nivel">
+                                <span class="nivel-badge">Nível {{ aluno.nivel }}</span>
+                                <span class="xp-badge">{{ aluno.xp }} XP</span>
+                            </div>
+                            <div class="progress" style="height: 10px;">
+                                <div class="progress-bar bg-success" role="progressbar" style="width: {{ aluno.progresso }}%;" aria-valuenow="{{ aluno.progresso }}" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                            <div class="aluno-acoes mt-3">
+                                <a href="{{ url_for('professor.aluno_visualizar', id=aluno.id) }}" class="btn btn-sm btn-primary">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                <a href="{{ url_for('professor.aluno_editar', id=aluno.id) }}" class="btn btn-sm btn-warning">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ aluno.id }}">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Modal de confirmação de exclusão -->
+                        <div class="modal fade" id="deleteModal{{ aluno.id }}" tabindex="-1" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Confirmar Exclusão</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>Tem certeza que deseja excluir o aluno <strong>{{ aluno.nome }}</strong>?</p>
+                                        <p class="text-danger">Esta ação não pode ser desfeita e também excluirá todas as notas e trabalhos associados a este aluno.</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                        <form action="{{ url_for('professor.aluno_excluir', id=aluno.id) }}" method="post">
+                                            <button type="submit" class="btn btn-danger">Excluir</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="card">
+                <div class="card-body text-center py-5">
+                    <i class="fas fa-user-graduate fa-3x text-muted mb-3"></i>
+                    <h5>Nenhum aluno encontrado</h5>
+                    <p class="text-muted">Adicione alunos para começar a gamificação.</p>
+                    <div class="mt-3">
+                        <a href="{{ url_for('professor.aluno_importar') }}" class="btn btn-success me-2">
+                            <i class="fas fa-file-import me-1"></i>
+                            Importar Alunos
+                        </a>
+                        <a href="{{ url_for('professor.aluno_novo') }}" class="btn btn-primary">
+                            <i class="fas fa-plus me-1"></i>
+                            Novo Aluno
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+        
+        <footer class="footer">
+            <div class="container-fluid">
+                <span>Sistema de Gamificação Escolar &copy; 2025. Todos os direitos reservados.</span>
+            </div>
+        </footer>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Toggle sidebar
+        document.getElementById('sidebarToggle').addEventListener('click', function() {
+            document.querySelector('.sidebar').classList.toggle('active');
+            document.querySelector('.main-content').classList.toggle('active');
+        });
+        
+        // Filtro dinâmico de turmas baseado no colégio selecionado
+        document.getElementById('colegio_id').addEventListener('change', function() {
+            const colegioId = this.value;
+            const turmaSelect = document.getElementById('turma_id');
+            
+            // Limpar select de turmas
+            turmaSelect.innerHTML = '<option value="">Todas as turmas</option>';
+            
+            if (colegioId) {
+                // Fazer requisição para obter turmas do colégio selecionado
+                fetch(`/api/turmas?colegio_id=${colegioId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        data.forEach(turma => {
+                            const option = document.createElement('option');
+                            option.value = turma.id;
+                            option.textContent = turma.nome;
+                            turmaSelect.appendChild(option);
+                        });
+                    });
+            }
+        });
+    </script>
+</body>
+</html>
