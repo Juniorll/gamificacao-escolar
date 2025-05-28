@@ -18,6 +18,7 @@ class Colegio(db.Model):
     endereco = db.Column(db.String(200))
     logo = db.Column(db.String(200))
     data_cadastro = db.Column(db.DateTime, default=db.func.current_timestamp())
+    turmas = db.relationship('Turma', backref='colegio', lazy='select')
 
 class ProfessorColegio(db.Model):
     professor_id = db.Column(db.Integer, db.ForeignKey('professor.id'), primary_key=True)
