@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notas - Sistema de Gamificação Escolar</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4e73df;
+            --secondary-color: #1cc88a;
+            --accent-color: #f6c23e;
+            --danger-color: #e74a3b;
+            --dark-color: #5a5c69;
+            --light-color: #f8f9fc;
+        }
+        
+        body {
+            background-color: #f8f9fc;
+            font-family: 'Nunito', sans-serif;
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background: linear-gradient(180deg, var(--primary-color) 10%, #224abe 100%);
+            color: white;
+            min-height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 100;
+            transition: all 0.3s;
+        }
+        
+        .sidebar-brand {
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem 1rem;
+            font-size: 1.2rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.05rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .sidebar-brand i {
+            margin-right: 0.5rem;
+            font-size: 1.1rem;
+        }
+        
+        .sidebar-menu {
+            padding: 1rem 0;
+        }
+        
+        .menu-item {
+            display: flex;
+            align-items: center;
+            padding: 0.8rem 1.5rem;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        
+        .menu-item:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+        
+        .menu-item.active {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-weight: 700;
+        }
+        
+        .menu-item i {
+            margin-right: 0.8rem;
+            width: 20px;
+            text-align: center;
+        }
+        
+        .sidebar-divider {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin: 1rem 0;
+        }
+        
+        .sidebar-heading {
+            padding: 0 1.5rem;
+            font-size: 0.7rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.1rem;
+            color: rgba(255, 255, 255, 0.4);
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: 250px;
+            padding: 1.5rem;
+            transition: all 0.3s;
+        }
+        
+        .navbar {
+            background-color: white;
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+            margin-bottom: 1.5rem;
+            border-radius: 0.5rem;
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+            color: var(--dark-color);
+        }
+        
+        .navbar-toggler {
+            border: none;
+            font-size: 1.2rem;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 0.5rem;
+        }
+        
+        .user-name {
+            font-weight: 700;
+            color: var(--dark-color);
+        }
+        
+        /* Cards */
+        .card {
+            border: none;
+            border-radius: 0.5rem;
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+            margin-bottom: 1.5rem;
+        }
+        
+        .card-header {
+            background-color: white;
+            border-bottom: 1px solid #e3e6f0;
+            padding: 1rem 1.25rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .card-header i {
+            color: var(--primary-color);
+            margin-right: 0.5rem;
+        }
+        
+        /* Table */
+        .table th {
+            background-color: var(--light-color);
+            color: var(--dark-color);
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 0.05em;
+        }
+        
+        .table-row {
+            transition: all 0.2s;
+        }
+        
+        .table-row:hover {
+            background-color: rgba(78, 115, 223, 0.05);
+        }
+        
+        /* Filtros */
+        .filtros {
+            background-color: white;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+        }
+        
+        /* Nota Styles */
+        .nota-input {
+            width: 70px;
+            text-align: center;
+            font-weight: 700;
+        }
+        
+        .nota-badge {
+            width: 70px;
+            text-align: center;
+            font-weight: 700;
+            padding: 0.5rem;
+            border-radius: 0.25rem;
+        }
+        
+        .nota-excelente {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+        
+        .nota-boa {
+            background-color: var(--accent-color);
+            color: white;
+        }
+        
+        .nota-regular {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .nota-baixa {
+            background-color: var(--danger-color);
+            color: white;
+        }
+        
+        .aluno-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        
+        .aluno-avatar-placeholder {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--light-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--dark-color);
+        }
+        
+        .aluno-info {
+            display: flex;
+            align-items: center;
+        }
+        
+        .aluno-nome {
+            margin-left: 0.5rem;
+            font-weight: 600;
+        }
+        
+        /* Footer */
+        .footer {
+            padding: 1.5rem 0;
+            color: #858796;
+            text-align: center;
+            font-size: 0.8rem;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                margin-left: -250px;
+            }
+            
+            .sidebar.active {
+                margin-left: 0;
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .main-content.active {
+                margin-left: 250px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-brand">
+            <i class="fas fa-gamepad"></i>
+            <span>Gamificação</span>
+        </div>
+        
+        <div class="sidebar-menu">
+            <a href="{{ url_for('professor.dashboard') }}" class="menu-item">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>Dashboard</span>
+            </a>
+            
+            <div class="sidebar-divider"></div>
+            <div class="sidebar-heading">Gestão Escolar</div>
+            
+            <a href="{{ url_for('professor.colegios') }}" class="menu-item">
+                <i class="fas fa-school"></i>
+                <span>Colégios</span>
+            </a>
+            
+            <a href="{{ url_for('professor.turmas') }}" class="menu-item">
+                <i class="fas fa-users"></i>
+                <span>Turmas</span>
+            </a>
+            
+            <a href="{{ url_for('professor.disciplinas') }}" class="menu-item">
+                <i class="fas fa-book"></i>
+                <span>Disciplinas</span>
+            </a>
+            
+            <a href="{{ url_for('professor.periodos') }}" class="menu-item">
+                <i class="fas fa-calendar-alt"></i>
+                <span>Períodos</span>
+            </a>
+            
+            <div class="sidebar-divider"></div>
+            <div class="sidebar-heading">Alunos e Atividades</div>
+            
+            <a href="{{ url_for('professor.alunos') }}" class="menu-item">
+                <i class="fas fa-user-graduate"></i>
+                <span>Alunos</span>
+            </a>
+            
+            <a href="{{ url_for('professor.atividades') }}" class="menu-item">
+                <i class="fas fa-tasks"></i>
+                <span>Atividades</span>
+            </a>
+            
+            <a href="{{ url_for('professor.notas') }}" class="menu-item active">
+                <i class="fas fa-star"></i>
+                <span>Notas</span>
+            </a>
+            
+            <a href="{{ url_for('professor.trabalhos') }}" class="menu-item">
+                <i class="fas fa-trophy"></i>
+                <span>Trabalhos Exemplares</span>
+            </a>
+            
+            <div class="sidebar-divider"></div>
+            <div class="sidebar-heading">Configurações</div>
+            
+            <a href="{{ url_for('professor.configuracoes') }}" class="menu-item">
+                <i class="fas fa-cog"></i>
+                <span>Configurações</span>
+            </a>
+            
+            <a href="{{ url_for('auth.logout') }}" class="menu-item">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Sair</span>
+            </a>
+        </div>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="main-content">
+        <nav class="navbar navbar-expand-lg navbar-light mb-4">
+            <div class="container-fluid">
+                <button id="sidebarToggle" class="navbar-toggler" type="button">
+                    <i class="fas fa-bars"></i>
+                </button>
+                
+                <a class="navbar-brand" href="{{ url_for('professor.dashboard') }}">
+                    Notas
+                </a>
+                
+                <div class="user-info ms-auto">
+                    <div class="user-avatar">
+                        {{ current_user.nome[0] }}
+                    </div>
+                    <div class="user-name">
+                        {{ current_user.nome }}
+                    </div>
+                </div>
+            </div>
+        </nav>
+        
+        <div class="container-fluid">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="h3 mb-0 text-gray-800">Notas</h1>
+            </div>
+            
+            <!-- Filtros -->
+            <div class="filtros mb-4">
+                <form method="get" action="{{ url_for('professor.notas') }}">
+                    <div class="row g-3">
+                        <div class="col-md-3">
+                            <label for="disciplina_id" class="form-label">Disciplina</label>
+                            <select class="form-select" id="disciplina_id" name="disciplina_id">
+                                <option value="">Todas as disciplinas</option>
+                                {% for disciplina in disciplinas %}
+                                <option value="{{ disciplina.id }}" {% if request.args.get('disciplina_id')|int == disciplina.id %}selected{% endif %}>{{ disciplina.nome }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="turma_id" class="form-label">Turma</label>
+                            <select class="form-select" id="turma_id" name="turma_id">
+                                <option value="">Todas as turmas</option>
+                                {% for turma in turmas %}
+                                <option value="{{ turma.id }}" {% if request.args.get('turma_id')|int == turma.id %}selected{% endif %}>{{ turma.nome }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="periodo_id" class="form-label">Período</label>
+                            <select class="form-select" id="periodo_id" name="periodo_id">
+                                <option value="">Todos os períodos</option>
+                                {% for periodo in periodos %}
+                                <option value="{{ periodo.id }}" {% if request.args.get('periodo_id')|int == periodo.id %}selected{% endif %}>{{ periodo.nome }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-3 d-flex align-items-end">
+                            <button type="submit" class="btn btn-primary w-100">
+                                <i class="fas fa-search me-1"></i>
+                                Filtrar
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            
+            <!-- Lista de Atividades -->
+            {% if atividades %}
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <i class="fas fa-star"></i>
+                        Atividades
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Atividade</th>
+                                    <th>Disciplina</th>
+                                    <th>Turma</th>
+                                    <th>Período</th>
+                                    <th>Data de Entrega</th>
+                                    <th>XP</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for atividade in atividades %}
+                                <tr class="table-row">
+                                    <td>{{ atividade.titulo }}</td>
+                                    <td>
+                                        <span class="badge" style="background-color: {{ atividade.disciplina.cor }};">
+                                            <i class="fas {{ atividade.disciplina.icone }} me-1"></i>
+                                            {{ atividade.disciplina.nome }}
+                                        </span>
+                                    </td>
+                                    <td>{{ atividade.turma.nome }}</td>
+                                    <td>{{ atividade.periodo.nome }}</td>
+                                    <td>{{ atividade.data_entrega.strftime('%d/%m/%Y') }}</td>
+                                    <td>
+                                        <span class="badge bg-warning">{{ atividade.xp }} XP</span>
+                                    </td>
+                                    <td>
+                                        <a href="{{ url_for('professor.notas_lancar', atividade_id=atividade.id) }}" class="btn btn-sm btn-primary">
+                                            <i class="fas fa-star me-1"></i>
+                                            Lançar Notas
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <div class="card">
+                <div class="card-body text-center py-5">
+                    <i class="fas fa-star fa-3x text-muted mb-3"></i>
+                    <h5>Nenhuma atividade encontrada</h5>
+                    <p class="text-muted">Adicione atividades para poder lançar notas.</p>
+                    <a href="{{ url_for('professor.atividade_nova') }}" class="btn btn-primary mt-2">
+                        <i class="fas fa-plus me-1"></i>
+                        Nova Atividade
+                    </a>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+        
+        <footer class="footer">
+            <div class="container-fluid">
+                <span>Sistema de Gamificação Escolar &copy; 2025. Todos os direitos reservados.</span>
+            </div>
+        </footer>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Toggle sidebar
+        document.getElementById('sidebarToggle').addEventListener('click', function() {
+            document.querySelector('.sidebar').classList.toggle('active');
+            document.querySelector('.main-content').classList.toggle('active');
+        });
+    </script>
+</body>
+</html>
