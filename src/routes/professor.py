@@ -286,7 +286,8 @@ def alunos():
 @professor_bp.route('/aluno/novo', methods=['GET', 'POST'])
 @login_required
 def aluno_novo():
-    turmas = Turma.query.filter_by(professor_id=current_user.id).all()
+    #turmas = Turma.query.filter_by(professor_id=current_user.id).all()
+    colegios = Colegio.query.join(Turma).filter(Turma.professor_id == current_user.id).distinct().all()
     
     if request.method == 'POST':
         nome = request.form.get('nome')
