@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil do Aluno - Sistema de Gamificação Escolar</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4e73df;
+            --secondary-color: #1cc88a;
+            --accent-color: #f6c23e;
+            --danger-color: #e74a3b;
+            --dark-color: #5a5c69;
+            --light-color: #f8f9fc;
+        }
+        
+        body {
+            background-color: #f8f9fc;
+            font-family: 'Nunito', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* Navbar */
+        .navbar {
+            background-color: white;
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+        }
+        
+        .navbar-brand i {
+            margin-right: 0.5rem;
+            font-size: 1.2rem;
+        }
+        
+        .nav-link {
+            color: var(--dark-color);
+            font-weight: 600;
+            padding: 0.5rem 1rem;
+        }
+        
+        .nav-link:hover {
+            color: var(--primary-color);
+        }
+        
+        .nav-link.active {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--primary-color);
+        }
+        
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 2rem 0;
+        }
+        
+        /* Cards */
+        .card {
+            border: none;
+            border-radius: 0.5rem;
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+            margin-bottom: 1.5rem;
+        }
+        
+        .card-header {
+            background-color: white;
+            border-bottom: 1px solid #e3e6f0;
+            padding: 1rem 1.25rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .card-header i {
+            color: var(--primary-color);
+            margin-right: 0.5rem;
+        }
+        
+        /* Perfil Header */
+        .perfil-header {
+            background: linear-gradient(180deg, var(--primary-color) 10%, #224abe 100%);
+            color: white;
+            padding: 3rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .perfil-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiB2aWV3Qm94PSIwIDAgMTI4MCAxNDAiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGcgZmlsbD0icmdiYSgyNTUsMjU1LDI1NSwwLjEpIj48cGF0aCBkPSJNMTI4MCAwTDY0MCA3MCAwIDB2MTQwbDY0MC03MCAxMjgwIDcwVjB6Ii8+PC9nPjwvc3ZnPg==');
+            background-size: 100% 100%;
+            z-index: 1;
+            opacity: 0.3;
+        }
+        
+        .perfil-content {
+            position: relative;
+            z-index: 2;
+        }
+        
+        .perfil-avatar {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid white;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+            margin-bottom: 1rem;
+        }
+        
+        .perfil-avatar-placeholder {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background-color: var(--light-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--dark-color);
+            font-weight: 700;
+            font-size: 3rem;
+            border: 5px solid white;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+            margin-bottom: 1rem;
+        }
+        
+        .perfil-nome {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .perfil-info {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 1.5rem;
+        }
+        
+        .perfil-badges {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .categoria-badge {
+            padding: 0.5rem 1rem;
+            border-radius: 0.25rem;
+            font-size: 1rem;
+            font-weight: 700;
+        }
+        
+        .nivel-badge {
+            padding: 0.5rem 1rem;
+            border-radius: 0.25rem;
+            font-size: 1rem;
+            font-weight: 700;
+            background-color: var(--accent-color);
+            color: #333;
+        }
+        
+        .ranking-badge {
+            padding: 0.5rem 1rem;
+            border-radius: 0.25rem;
+            font-size: 1rem;
+            font-weight: 700;
+            background-color: var(--secondary-color);
+            color: white;
+        }
+        
+        /* Stats Cards */
+        .stats-card {
+            text-align: center;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            background-color: white;
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+            transition: all 0.3s;
+        }
+        
+        .stats-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .stats-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+        
+        .stats-value {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stats-label {
+            font-size: 0.9rem;
+            color: var(--dark-color);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        /* Progress Bar */
+        .progress {
+            height: 1rem;
+            border-radius: 1rem;
+            background-color: #e9ecef;
+            margin-bottom: 0.5rem;
+        }
+        
+        .progress-bar {
+            background-color: var(--accent-color);
+        }
+        
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: var(--dark-color);
+        }
+        
+        /* Timeline */
+        .timeline {
+            position: relative;
+            padding-left: 2rem;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 7px;
+            width: 2px;
+            background-color: #e3e6f0;
+        }
+        
+        .timeline-item {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+        
+        .timeline-item:last-child {
+            margin-bottom: 0;
+        }
+        
+        .timeline-marker {
+            position: absolute;
+            top: 0;
+            left: -2rem;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            border: 2px solid white;
+        }
+        
+        .timeline-content {
+            background-color: white;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+        }
+        
+        .timeline-date {
+            font-size: 0.8rem;
+            color: var(--dark-color);
+            margin-bottom: 0.5rem;
+        }
+        
+        .timeline-title {
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .timeline-description {
+            color: var(--dark-color);
+        }
+        
+        .timeline-status {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.8rem;
+            font-weight: 700;
+            margin-top: 0.5rem;
+        }
+        
+        .status-concluido {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+        
+        .status-pendente {
+            background-color: var(--accent-color);
+            color: #333;
+        }
+        
+        .status-atrasado {
+            background-color: var(--danger-color);
+            color: white;
+        }
+        
+        /* Trabalhos Exemplares */
+        .trabalho-card {
+            border-radius: 0.5rem;
+            overflow: hidden;
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+            transition: all 0.3s;
+        }
+        
+        .trabalho-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .trabalho-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        
+        .trabalho-body {
+            padding: 1rem;
+            background-color: white;
+        }
+        
+        .trabalho-title {
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .trabalho-disciplina {
+            color: var(--primary-color);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        .trabalho-description {
+            color: var(--dark-color);
+            margin-bottom: 1rem;
+        }
+        
+        .trabalho-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.8rem;
+            color: var(--dark-color);
+        }
+        
+        /* Chance de Aprovação */
+        .chance-card {
+            text-align: center;
+            padding: 2rem;
+        }
+        
+        .chance-value {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+        }
+        
+        .chance-high {
+            color: var(--secondary-color);
+        }
+        
+        .chance-medium {
+            color: var(--accent-color);
+        }
+        
+        .chance-low {
+            color: var(--danger-color);
+        }
+        
+        .chance-message {
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        /* Footer */
+        .footer {
+            background-color: white;
+            padding: 1.5rem 0;
+            color: #858796;
+            text-align: center;
+            font-size: 0.8rem;
+            border-top: 1px solid #e3e6f0;
+            margin-top: auto;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .perfil-avatar, .perfil-avatar-placeholder {
+                width: 100px;
+                height: 100px;
+                font-size: 2rem;
+            }
+            
+            .perfil-nome {
+                font-size: 1.8rem;
+            }
+            
+            .perfil-info {
+                font-size: 1rem;
+            }
+            
+            .stats-value {
+                font-size: 1.5rem;
+            }
+            
+            .chance-value {
+                font-size: 2.5rem;
+            }
+            
+            .chance-message {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container">
+            <a class="navbar-brand" href="{{ url_for('aluno.ranking') }}">
+                <i class="fas fa-gamepad"></i>
+                Sistema de Gamificação
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('aluno.ranking') }}">
+                            <i class="fas fa-trophy me-1"></i>
+                            Ranking
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('aluno.trabalhos') }}">
+                            <i class="fas fa-star me-1"></i>
+                            Trabalhos Exemplares
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('auth.login') }}">
+                            <i class="fas fa-sign-in-alt me-1"></i>
+                            Área do Professor
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Perfil Header -->
+    <div class="perfil-header">
+        <div class="container">
+            <div class="perfil-content text-center">
+                {% if aluno.foto %}
+                <img src="{{ aluno.foto }}" class="perfil-avatar" alt="{{ aluno.nome }}">
+                {% else %}
+                <div class="perfil-avatar-placeholder">
+                    {{ aluno.nome[0] }}
+                </div>
+                {% endif %}
+                <h1 class="perfil-nome">{{ aluno.nome }}</h1>
+                <p class="perfil-info">{{ aluno.turma.nome }} - {{ aluno.turma.colegio.nome }}</p>
+                <div class="perfil-badges">
+                    <span class="categoria-badge" style="background-color: {{ aluno.categoria_cor }}; color: white;">
+                        {{ aluno.categoria }}
+                    </span>
+                    <span class="nivel-badge">
+                        Nível {{ aluno.nivel }}
+                    </span>
+                    <span class="ranking-badge">
+                        #{{ aluno.ranking }} no Ranking
+                    </span>
+                </div>
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <div class="col-md-8">
+                            <div class="progress" title="{{ aluno.xp }}/{{ aluno.proximo_nivel_xp }} XP para o próximo nível">
+                                <div class="progress-bar" role="progressbar" style="width: {{ (aluno.xp - aluno.nivel_atual_xp) / (aluno.proximo_nivel_xp - aluno.nivel_atual_xp) * 100 }}%" aria-valuenow="{{ aluno.xp }}" aria-valuemin="{{ aluno.nivel_atual_xp }}" aria-valuemax="{{ aluno.proximo_nivel_xp }}"></div>
+                            </div>
+                            <div class="progress-info">
+                                <span>{{ aluno.xp }} XP</span>
+                                <span>{{ aluno.proximo_nivel_xp - aluno.xp }} XP para o próximo nível</span>
+                                <span>{{ aluno.proximo_nivel_xp }} XP</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="container">
+            <!-- Stats -->
+            <div class="row mb-4">
+                <div class="col-md-3 mb-4 mb-md-0">
+                    <div class="stats-card">
+                        <div class="stats-icon">
+                            <i class="fas fa-tasks"></i>
+                        </div>
+                        <div class="stats-value">{{ aluno.atividades_concluidas }}</div>
+                        <div class="stats-label">Atividades Concluídas</div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-4 mb-md-0">
+                    <div class="stats-card">
+                        <div class="stats-icon">
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <div class="stats-value">{{ aluno.media_geral|round(1) }}</div>
+                        <div class="stats-label">Média Geral</div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-4 mb-md-0">
+                    <div class="stats-card">
+                        <div class="stats-icon">
+                            <i class="fas fa-trophy"></i>
+                        </div>
+                        <div class="stats-value">{{ aluno.trabalhos_exemplares }}</div>
+                        <div class="stats-label">Trabalhos Exemplares</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stats-card">
+                        <div class="stats-icon">
+                            <i class="fas fa-bolt"></i>
+                        </div>
+                        <div class="stats-value">{{ aluno.xp }}</div>
+                        <div class="stats-label">XP Total</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <!-- Timeline -->
+                <div class="col-lg-8">
+                    <div class="card">
+                        <div class="card-header">
+                            <div>
+                                <i class="fas fa-calendar-alt"></i>
+                                Linha do Tempo
+                            </div>
+                            <div>
+                                <select class="form-select form-select-sm" id="disciplinaFilter">
+                                    <option value="">Todas as disciplinas</option>
+                                    {% for disciplina in disciplinas %}
+                                    <option value="{{ disciplina.id }}">{{ disciplina.nome }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="timeline">
+                                {% for atividade in atividades %}
+                                <div class="timeline-item" data-disciplina="{{ atividade.disciplina_id }}">
+                                    <div class="timeline-marker"></div>
+                                    <div class="timeline-content">
+                                        <div class="timeline-date">{{ atividade.data_entrega.strftime('%d/%m/%Y') }}</div>
+                                        <h5 class="timeline-title">{{ atividade.titulo }}</h5>
+                                        <p class="timeline-description">{{ atividade.descricao }}</p>
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <span class="badge" style="background-color: {{ atividade.disciplina_cor }}; color: white;">
+                                                {{ atividade.disciplina_nome }}
+                                            </span>
+                                            {% if atividade.status == 'concluido' %}
+                                            <span class="timeline-status status-concluido">
+                                                <i class="fas fa-check-circle me-1"></i>
+                                                Concluído - Nota: {{ atividade.nota }}
+                                            </span>
+                                            {% elif atividade.status == 'pendente' %}
+                                            <span class="timeline-status status-pendente">
+                                                <i class="fas fa-clock me-1"></i>
+                                                Pendente
+                                            </span>
+                                            {% else %}
+                                            <span class="timeline-status status-atrasado">
+                                                <i class="fas fa-exclamation-circle me-1"></i>
+                                                Atrasado
+                                            </span>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Trabalhos Exemplares -->
+                    <div class="card">
+                        <div class="card-header">
+                            <div>
+                                <i class="fas fa-star"></i>
+                                Trabalhos Exemplares
+                            </div>
+                            <div>
+                                <a href="{{ url_for('aluno.trabalhos') }}" class="btn btn-sm btn-primary">Ver Todos</a>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                {% for trabalho in trabalhos_exemplares %}
+                                <div class="col-md-6 mb-4">
+                                    <div class="trabalho-card">
+                                        {% if trabalho.imagem %}
+                                        <img src="{{ trabalho.imagem }}" class="trabalho-img" alt="{{ trabalho.titulo }}">
+                                        {% else %}
+                                        <div class="trabalho-img d-flex align-items-center justify-content-center bg-light">
+                                            <i class="fas fa-file-alt fa-3x text-muted"></i>
+                                        </div>
+                                        {% endif %}
+                                        <div class="trabalho-body">
+                                            <h5 class="trabalho-title">{{ trabalho.titulo }}</h5>
+                                            <div class="trabalho-disciplina">{{ trabalho.disciplina_nome }}</div>
+                                            <p class="trabalho-description">{{ trabalho.descricao }}</p>
+                                            <div class="trabalho-footer">
+                                                <span>{{ trabalho.data.strftime('%d/%m/%Y') }}</span>
+                                                <span>Nota: {{ trabalho.nota }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Sidebar -->
+                <div class="col-lg-4">
+                    <!-- Chance de Aprovação -->
+                    <div class="card">
+                        <div class="card-header">
+                            <div>
+                                <i class="fas fa-chart-line"></i>
+                                Chance de Aprovação
+                            </div>
+                        </div>
+                        <div class="card-body chance-card">
+                            <div class="chance-value {% if aluno.chance_aprovacao >= 80 %}chance-high{% elif aluno.chance_aprovacao >= 50 %}chance-medium{% else %}chance-low{% endif %}">
+                                {{ aluno.chance_aprovacao }}%
+                            </div>
+                            <p class="chance-message">
+                                {% if aluno.chance_aprovacao >= 80 %}
+                                Parabéns! Você está no caminho certo para a aprovação. Continue com o bom trabalho!
+                                {% elif aluno.chance_aprovacao >= 50 %}
+                                Você está indo bem, mas ainda há espaço para melhorias. Foque nas atividades pendentes.
+                                {% else %}
+                                Atenção! Sua chance de aprovação está baixa. Procure seu professor para orientações.
+                                {% endif %}
+                            </p>
+                            <div class="progress mb-3">
+                                <div class="progress-bar {% if aluno.chance_aprovacao >= 80 %}bg-success{% elif aluno.chance_aprovacao >= 50 %}bg-warning{% else %}bg-danger{% endif %}" role="progressbar" style="width: {{ aluno.chance_aprovacao }}%" aria-valuenow="{{ aluno.chance_aprovacao }}" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Disciplinas -->
+                    <div class="card">
+                        <div class="card-header">
+                            <div>
+                                <i class="fas fa-book"></i>
+                                Desempenho por Disciplina
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            {% for disciplina in desempenho_disciplinas %}
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                    <span style="color: {{ disciplina.cor }}; font-weight: 700;">
+                                        <i class="{{ disciplina.icone }} me-1"></i>
+                                        {{ disciplina.nome }}
+                                    </span>
+                                    <span class="badge {% if disciplina.media >= 7 %}bg-success{% elif disciplina.media >= 5 %}bg-warning{% else %}bg-danger{% endif %}">
+                                        {{ disciplina.media }}
+                                    </span>
+                                </div>
+                                <div class="progress" style="height: 0.5rem;">
+                                    <div class="progress-bar" role="progressbar" style="width: {{ disciplina.media * 10 }}%; background-color: {{ disciplina.cor }};" aria-valuenow="{{ disciplina.media }}" aria-valuemin="0" aria-valuemax="10"></div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    
+                    <!-- Próximas Atividades -->
+                    <div class="card">
+                        <div class="card-header">
+                            <div>
+                                <i class="fas fa-tasks"></i>
+                                Próximas Atividades
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-group list-group-flush">
+                                {% for atividade in proximas_atividades %}
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <div class="fw-bold">{{ atividade.titulo }}</div>
+                                        <div class="small text-muted">{{ atividade.disciplina_nome }}</div>
+                                    </div>
+                                    <div class="text-end">
+                                        <div class="small text-muted">Entrega:</div>
+                                        <div class="badge bg-primary">{{ atividade.data_entrega.strftime('%d/%m/%Y') }}</div>
+                                    </div>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <span>Sistema de Gamificação Escolar &copy; 2025. Todos os direitos reservados.</span>
+        </div>
+    </footer>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Filtro de disciplinas na timeline
+        document.getElementById('disciplinaFilter').addEventListener('change', function() {
+            const disciplinaId = this.value;
+            const timelineItems = document.querySelectorAll('.timeline-item');
+            
+            timelineItems.forEach(function(item) {
+                if (!disciplinaId || item.getAttribute('data-disciplina') === disciplinaId) {
+                    item.style.display = '';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
