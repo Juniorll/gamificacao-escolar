@@ -284,35 +284,26 @@ def alunos():
     
     return render_template('professor/alunos.html', alunos=alunos, turmas=turmas, colegios=colegios)
 
-@professor_bp.route('/aluno/novo', methods=['GET', 'POST'])
+@professor_bp.route('/alunos')
 @login_required
-def aluno_novo():
-    #turmas = Turma.query.filter_by(professor_id=current_user.id).all()
-    colegios = Colegio.query.join(Turma).filter(Turma.professor_id == current_user.id).distinct().all()
+def alunos():
+    # Obter parâmetros de filtro
+    turma_id = request.args.get('turma_id', type=int)
     
-    if request.method == 'POST':
-        nome = request.form.get('nome')
-        email = request.form.get('email')
-        foto = request.form.get('foto')
-        avatar = request.form.get('avatar')
-        turma_id = request.form.get('turma_id')
-        
-        novo_aluno = Aluno(
-            nome=nome,
-            email=email,
-            foto=foto,
-            avatar=avatar,
-            turma_id=turma_id
-        )
-        
-        db.session.add(novo_aluno)
-        db.session.commit()
-        
-        flash('Aluno cadastrado com sucesso!', 'success')
-        return redirect(url_for('professor.alunos'))
+    # Consulta base para alunos
+    query = Aluno.query
     
-    # return render_template('professor/aluno_form.html', turmas=turmas)
-    return render_template('professor/aluno_form.html', colegios=colegios)
+    # Aplicar filtros se fornecidos
+    if turma_id:
+        query = query.filter(Aluno.turma_id == turma_id)
+    
+    # Obter alunos
+    alunos = query.all()
+    
+    # Obter turmas para filtro
+    turmas = Turma.query.all()
+    
+    return render_template('professor/alunos.html', alunos=alunos, turmas=turmas)
 
 @professor_bp.route('/aluno/importar', methods=['GET', 'POST'])
 @login_required
@@ -376,11 +367,35 @@ def aluno_excluir(id):
 @professor_bp.route('/atividades')
 @login_required
 def atividades():
-    disciplinas = Disciplina.query.filter_by(professor_id=current_user.id).all()
-    disciplina_ids = [disciplina.id for disciplina in disciplinas]
-    atividades = Atividade.query.filter(Atividade.disciplina_id.in_(disciplina_ids)).all()
+    # Obter parâmetros de filtro
+    turma_id = request.args.get('turma_id', type=int)
+    disciplina_id = request.args.get('disciplina_id', type=int)
+    periodo_id = request.args.get('periodo_id', type=int)
     
-    return render_template('professor/atividades.html', atividades=atividades, disciplinas=disciplinas)
+    # Consulta base para atividades
+    query = Atividade.query
+    
+    # Aplicar filtros se fornecidos
+    if turma_id:
+        query = query.filter(Atividade.turma_id == turma_id)
+    if disciplina_id:
+        query = query.filter(Atividade.disciplina_id == disciplina_id)
+    if periodo_id:
+        query = query.filter(Atividade.periodo_id == periodo_id)
+    
+    # Obter atividades
+    atividades = query.all()
+    
+    # Obter dados para os filtros
+    turmas = Turma.query.all()
+    disciplinas = Disciplina.query.all()
+    periodos = Periodo.query.all()
+    
+    return render_template('professor/atividades.html', 
+                          atividades=atividades,
+                          turmas=turmas,
+                          disciplinas=disciplinas,
+                          periodos=periodos)
 
 @professor_bp.route('/atividade/nova', methods=['GET', 'POST'])
 @login_required
@@ -414,9 +429,10 @@ def atividade_nova():
         db.session.commit()
         
         flash('Atividade cadastrada com sucesso!', 'success')
-        return redirect(url_for('professor.atividades'))
-    
-    return render_template('professor/atividade_form.html', disciplinas=disciplinas, periodos=periodos)
+        return render_template('professor/atividade_form.html', 
+                          turmas=turmas,
+                          disciplinas=disciplinas,
+                          periodos=periodos)
 
 @professor_bp.route('/atividade/<int:id>/editar', methods=['GET', 'POST'])
 @login_required
@@ -468,13 +484,35 @@ def atividade_excluir(id):
 @professor_bp.route('/notas')
 @login_required
 def notas():
-    disciplinas = Disciplina.query.filter_by(professor_id=current_user.id).all()
-    disciplina_ids = [disciplina.id for disciplina in disciplinas]
-    atividades = Atividade.query.filter(Atividade.disciplina_id.in_(disciplina_ids)).all()
-    atividade_ids = [atividade.id for atividade in atividades]
-    notas = Nota.query.filter(Nota.atividade_id.in_(atividade_ids)).all()
+    # Obter parâmetros de filtro
+    turma_id = request.args.get('turma_id', type=int)
+    disciplina_id = request.args.get('disciplina_id', type=int)
+    periodo_id = request.args.get('periodo_id', type=int)
     
-    return render_template('professor/notas.html', notas=notas, atividades=atividades)
+    # Obter atividades para lançamento de notas
+    query = Atividade.query
+    
+    # Aplicar filtros se fornecidos
+    if turma_id:
+        query = query.filter(Atividade.turma_id == turma_id)
+    if disciplina_id:
+        query = query.filter(Atividade.disciplina_id == disciplina_id)
+    if periodo_id:
+        query = query.filter(Atividade.periodo_id == periodo_id)
+    
+    # Obter atividades
+    atividades = query.all()
+    
+    # Obter dados para os filtros
+    turmas = Turma.query.all()
+    disciplinas = Disciplina.query.all()
+    periodos = Periodo.query.all()
+    
+    return render_template('professor/notas.html', 
+                          atividades=atividades,
+                          turmas=turmas,
+                          disciplinas=disciplinas,
+                          periodos=periodos)
 
 @professor_bp.route('/nota/nova', methods=['GET', 'POST'])
 @login_required
@@ -563,13 +601,35 @@ def nota_excluir(id):
 @professor_bp.route('/trabalhos')
 @login_required
 def trabalhos():
-    disciplinas = Disciplina.query.filter_by(professor_id=current_user.id).all()
-    disciplina_ids = [disciplina.id for disciplina in disciplinas]
-    atividades = Atividade.query.filter(Atividade.disciplina_id.in_(disciplina_ids)).all()
-    atividade_ids = [atividade.id for atividade in atividades]
-    trabalhos = TrabalhoExemplar.query.filter(TrabalhoExemplar.atividade_id.in_(atividade_ids)).all()
+    # Obter parâmetros de filtro
+    turma_id = request.args.get('turma_id', type=int)
+    disciplina_id = request.args.get('disciplina_id', type=int)
+    periodo_id = request.args.get('periodo_id', type=int)
     
-    return render_template('professor/trabalhos.html', trabalhos=trabalhos, atividades=atividades)
+    # Obter trabalhos exemplares
+    query = Trabalho.query
+    
+    # Aplicar filtros se fornecidos
+    if turma_id:
+        query = query.filter(Trabalho.turma_id == turma_id)
+    if disciplina_id:
+        query = query.filter(Trabalho.disciplina_id == disciplina_id)
+    if periodo_id:
+        query = query.filter(Trabalho.periodo_id == periodo_id)
+    
+    # Obter trabalhos
+    trabalhos = query.all()
+    
+    # Obter dados para os filtros
+    turmas = Turma.query.all()
+    disciplinas = Disciplina.query.all()
+    periodos = Periodo.query.all()
+    
+    return render_template('professor/trabalhos.html', 
+                          trabalhos=trabalhos,
+                          turmas=turmas,
+                          disciplinas=disciplinas,
+                          periodos=periodos)
 
 @professor_bp.route('/trabalho/novo', methods=['GET', 'POST'])
 @login_required
