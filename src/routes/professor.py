@@ -721,9 +721,58 @@ def trabalho_excluir(id):
 @professor_bp.route('/configuracoes', methods=['GET', 'POST'])
 @login_required
 def configuracoes():
-    if request.method == 'POST':
-        # Lógica para salvar configurações
-        flash('Configurações salvas com sucesso!', 'success')
-        return redirect(url_for('professor.configuracoes'))
+    # Obter configurações atuais
+    config = {
+        'xp_base': 100,
+        'niveis_config': 'Iniciante:0\nAprendiz:100\nAvançado:300\nEspecialista:600\nMestre:1000',
+        'categorias_config': 'Bronze:0\nPrata:6.0\nOuro:7.5\nPlatina:8.5\nDiamante:9.5',
+        'mostrar_ranking': True,
+        'mostrar_chance_aprovacao': True,
+        'cor_principal': '#4e73df',
+        'icone_sistema': 'fa-gamepad',
+        'mensagem_boas_vindas': 'Bem-vindo ao Sistema de Gamificação Escolar!',
+        'notificar_novas_atividades': True,
+        'notificar_novas_notas': True,
+        'notificar_trabalhos_exemplares': True,
+        'notificar_novos_niveis': True,
+        'email_notificacoes': ''
+    }
     
-    return render_template('professor/configuracoes.html')
+    return render_template('professor/configuracoes.html', config=config)
+
+@professor_bp.route('/configuracoes/perfil', methods=['POST'])
+@login_required
+def configuracoes_perfil():
+    # Lógica para salvar configurações de perfil
+    # Obter dados do formulário
+    nome = request.form.get('nome')
+    email = request.form.get('email')
+    senha_atual = request.form.get('senha_atual')
+    nova_senha = request.form.get('nova_senha')
+    
+    # Atualizar usuário
+    # ...
+    
+    # Redirecionar de volta para configurações
+    return redirect(url_for('professor.configuracoes'))
+
+@professor_bp.route('/configuracoes/gamificacao', methods=['POST'])
+@login_required
+def configuracoes_gamificacao():
+    # Lógica para salvar configurações de gamificação
+    # ...
+    return redirect(url_for('professor.configuracoes'))
+
+@professor_bp.route('/configuracoes/visual', methods=['POST'])
+@login_required
+def configuracoes_visual():
+    # Lógica para salvar configurações visuais
+    # ...
+    return redirect(url_for('professor.configuracoes'))
+
+@professor_bp.route('/configuracoes/notificacoes', methods=['POST'])
+@login_required
+def configuracoes_notificacoes():
+    # Lógica para salvar configurações de notificações
+    # ...
+    return redirect(url_for('professor.configuracoes'))
